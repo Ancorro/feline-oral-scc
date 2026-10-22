@@ -67,6 +67,10 @@ ol.refs { margin: 0; padding-left: 1.6em; display: grid; gap: 7px; font-size: .8
 ol.refs li { scroll-margin-top: 70px; }
 footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+nav.toc a[aria-current="page"] { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.pager { display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 14px; font-size: .9rem; }
+.pager a { text-decoration: none; font-weight: 500; }
+.pager a:hover { text-decoration: underline; }
 </style>
 
 <div class="wrap">
@@ -77,20 +81,19 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   <p class="note">Notes from published studies, not veterinary advice. Most studies are small and look back at past cases. Tumor site, size and the cat's health change the picture; take this to a veterinary oncologist.</p>
 </header>
 
-<nav class="toc" aria-label="Sections"><ul>
-  <li><a href="#glance">At a glance</a></li>
-  <li><a href="#compare">All treatments</a></li>
-  <li><a href="#radiation">Radiation</a></li>
-  <li><a href="#chemo">Chemo</a></li>
-  <li><a href="#lowrisk">Low-risk</a></li>
-  <li><a href="#surgery">Surgery</a></li>
-  <li><a href="#trials">Active trials</a></li>
-  <li><a href="#experimental">Experimental</a></li>
-  <li><a href="#recent">Recent data</a></li>
-  <li><a href="#sources">Sources</a></li>
+<nav class="toc" aria-label="Pages"><ul>
+  <li><a href="#overview" data-page="overview">Overview</a></li>
+  <li><a href="#radiation" data-page="radiation">Radiation</a></li>
+  <li><a href="#chemo" data-page="chemo">Chemotherapy</a></li>
+  <li><a href="#lowrisk" data-page="lowrisk">Low-risk care</a></li>
+  <li><a href="#surgery" data-page="surgery">Surgery</a></li>
+  <li><a href="#trials" data-page="trials">Active trials</a></li>
+  <li><a href="#experimental" data-page="experimental">Experimental</a></li>
+  <li><a href="#recent" data-page="recent">Recent data</a></li>
+  <li><a href="#sources" data-page="sources">Sources</a></li>
 </ul></nav>
 
-<section id="glance">
+<section id="glance" data-page="overview">
   <h2>At a glance</h2>
   <div class="stats">
     <div class="stat"><b>30–60 d</b><span>median survival, no treatment</span><small>[1][2]</small></div>
@@ -111,7 +114,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   </ul></div>
 </section>
 
-<section id="compare">
+<section id="compare" data-page="overview">
   <h2>All treatments compared</h2>
   <p>Median survival time (MST) is the point by which half the cats in a study had died. Bars run 0–365 days; the grey bar is the untreated reference. Different studies enrolled different cats, so compare loosely.</p>
   <div class="tbl"><table>
@@ -136,7 +139,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   </table></div>
 </section>
 
-<section id="radiation">
+<section id="radiation" data-page="radiation">
   <h2>Radiation therapy</h2>
   <p>Radiation aims high-energy beams at the tumor over several sessions, each under brief anesthesia. Protocols differ in dose per session (Gy, the unit of absorbed dose) and number of sessions. Courses that pack many sessions into 1–2 weeks ("accelerated") outperform once-a-week palliative courses.</p>
   <div class="tbl"><table>
@@ -162,7 +165,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   <p>Mouth inflammation (mucositis) is nearly universal and painful for 2–4 weeks; most clinics place a feeding tube first. Late effects: white fur, skin scarring, and in a minority, bone death and jaw fractures (9 of 47 cats in one series). [3][4]</p>
 </section>
 
-<section id="chemo">
+<section id="chemo" data-page="chemo">
   <h2>Chemotherapy</h2>
   <p>Given alone, no chemotherapy drug has worked well for this tumor. Carboplatin given with radiation is the one combination with decent data.</p>
   <div class="tbl"><table>
@@ -178,7 +181,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   </table></div>
 </section>
 
-<section id="lowrisk">
+<section id="lowrisk" data-page="lowrisk">
   <h2>Low-risk and comfort-focused care</h2>
   <p>These need little or no anesthesia and can run alongside other treatment or on their own. They mostly improve comfort; a few modestly extend survival.</p>
   <div class="tbl"><table>
@@ -195,7 +198,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   <p class="src">Without treatment cats usually stop eating within 1–2 months. With pain medicine and supportive care alone, comfortable time is typically 2–3 months. [1]</p>
 </section>
 
-<section id="surgery">
+<section id="surgery" data-page="surgery">
   <h2>Surgery</h2>
   <p>Surgery offers the longest survival when the tumor can be removed with clean margins, mainly at the front of the lower jaw. Tongue, throat and back-of-mouth tumors are rarely removable.</p>
   <div class="tbl"><table>
@@ -208,7 +211,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   </table></div>
 </section>
 
-<section id="trials">
+<section id="trials" data-page="trials">
   <h2>Active clinical trials, explained</h2>
   <p>Listed as enrolling on institution or registry pages as of October 2026. None confirmed by phone; call before planning around one. Each card says what the treatment is, why researchers think it might work, and what the trial costs the owner.</p>
   <div class="cards">
@@ -287,7 +290,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   </div>
 </section>
 
-<section id="experimental">
+<section id="experimental" data-page="experimental">
   <h2>Experimental treatments and current data</h2>
   <p>Treatments that have been tried in cats or cat tumor cells but are not available in regular practice. Ordered from most to least clinical evidence.</p>
   <div class="tbl"><table>
@@ -348,7 +351,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   </div>
 </section>
 
-<section id="recent">
+<section id="recent" data-page="recent">
   <h2>Recent data, 2025–2026</h2>
   <div class="tbl"><table>
     <thead><tr><th>Date</th><th>Study</th><th>Finding</th><th>Meaning for treatment</th><th>Ref</th></tr></thead>
@@ -364,7 +367,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   </table></div>
 </section>
 
-<section id="sources">
+<section id="sources" data-page="sources">
   <h2>Sources</h2>
   <ol class="refs">
     <li id="r1"><a href="https://todaysveterinarypractice.com/oncology/feline-oral-squamous-cell-carcinoma/">A Review of Feline Oral SCC</a>, Today's Veterinary Practice.</li>
@@ -405,5 +408,27 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   </ol>
 </section>
 
+<div class="pager" id="pager"></div>
+<script>
+(function(){
+  var order=['overview','radiation','chemo','lowrisk','surgery','trials','experimental','recent','sources'];
+  var labels={overview:'Overview',radiation:'Radiation',chemo:'Chemotherapy',lowrisk:'Low-risk care',surgery:'Surgery',trials:'Active trials',experimental:'Experimental',recent:'Recent data',sources:'Sources'};
+  var secs=document.querySelectorAll('section[data-page]');
+  var links=document.querySelectorAll('nav.toc a[data-page]');
+  var pager=document.getElementById('pager');
+  function show(pg, scroll){
+    if(order.indexOf(pg)<0) pg='overview';
+    secs.forEach(function(s){ s.hidden = s.dataset.page!==pg; });
+    links.forEach(function(a){ if(a.dataset.page===pg) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+    var i=order.indexOf(pg), prev=order[i-1], next=order[i+1];
+    pager.innerHTML=(prev?'<a href="#'+prev+'">&larr; '+labels[prev]+'</a>':'<span></span>')+(next?'<a href="#'+next+'">'+labels[next]+' &rarr;</a>':'<span></span>');
+    if(scroll) window.scrollTo(0,0);
+  }
+  function fromHash(){ var h=(location.hash||'').replace('#',''); var sec=document.getElementById(h); var pg = sec && sec.dataset.page ? sec.dataset.page : h; show(pg,false); if(sec && sec.dataset.page && h!==pg){ sec.scrollIntoView(); } }
+  window.addEventListener('hashchange', function(){ fromHash(); });
+  document.addEventListener('click', function(e){ var a=e.target.closest('a[href^="#"]'); if(!a) return; var h=a.getAttribute('href').slice(1); var sec=document.getElementById(h); var pg=sec&&sec.dataset.page?sec.dataset.page:h; if(order.indexOf(pg)>=0){ e.preventDefault(); if(location.hash==='#'+h){ fromHash(); } else { location.hash=h; } if(!(sec&&sec.dataset.page&&h!==pg)) window.scrollTo(0,0); } });
+  fromHash();
+})();
+</script>
 <footer>Repo: ~/Desktop/projects/feline-oral-scc · Survival bars scaled to 365 days · Bracketed numbers refer to the sources list.</footer>
 </div>
