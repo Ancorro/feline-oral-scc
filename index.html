@@ -10,7 +10,7 @@ body { background: var(--bg); color: var(--fg); font: 16px/1.65 "Inter", system-
 h1 { font-size: 1.7rem; font-weight: 600; margin: 0 0 6px; line-height: 1.25; }
 h2 { font-size: 1.3rem; font-weight: 600; margin: 0 0 16px; }
 h3 { font-size: 1.15rem; font-weight: 600; margin: 32px 0 10px; }
-h4 { font-size: .95rem; font-weight: 600; margin: 24px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+h4 { font-size: 1rem; font-weight: 600; margin: 26px 0 8px; }
 p { margin: 0 0 14px; }
 ul { margin: 0 0 14px; padding-left: 1.3em; }
 li { margin-bottom: 4px; }
@@ -74,40 +74,40 @@ section[hidden] { display: none; }
 
   <h4>A small tumor that a surgeon judges removable</h4>
   <p>This applies to a minority of cats, mostly those with a tumor at the front of the jaw.</p>
-  <dl class="opts">
-    <dt>Maxillectomy, removal of part of the upper jaw <span class="ref">[36]</span></dt>
-    <dd><b>Median survival not reached; 83% alive at one and two years.</b> Thirteen cats with SCC, median tumor 1.6 cm. One operation; appetite is poor for about a week, the wound breaks down in 20% of cats, and the face is visibly changed.</dd>
-    <dt>Mandibulectomy, removal of part of the lower jaw <span class="ref">[6]</span></dt>
-    <dd><b>Median 217 days; 43% alive at one year.</b> Twenty-one cats with SCC; those with tumors at the front of the jaw lived a median of 911 days. One operation; 41% needed a feeding tube and 12% never ate on their own again.</dd>
-    <dt>Surgery followed by radiation <span class="ref">[1]</span></dt>
-    <dd><b>About 14 months of tumor control</b>, the longest reported, in small series. An operation followed by 15 to 20 daily radiation sessions.</dd>
-  </dl>
+  <div class="tbl"><table>
+    <colgroup><col style="width:30%"><col style="width:20%"><col style="width:44%"><col style="width:6%"></colgroup>
+    <thead><tr><th>Treatment</th><th>Median survival</th><th>What the study found</th><th>Ref.</th></tr></thead>
+    <tbody>
+      <tr><td>Maxillectomy (part of the upper jaw removed)</td><td class="n">Not reached; 83% alive at two years</td><td>Thirteen cats with SCC, median tumor 1.6 cm. One operation. Appetite is poor for about a week and the wound breaks down in 20% of cats.</td><td class="ref">36</td></tr>
+      <tr><td>Mandibulectomy (part of the lower jaw removed)</td><td class="n">217 days; 43% alive at one year</td><td>Twenty-one cats with SCC. Front-of-jaw tumors gave a median of 911 days. 41% needed a feeding tube and 12% never ate on their own again.</td><td class="ref">6</td></tr>
+      <tr><td>Surgery followed by radiation</td><td class="n">About 14 months</td><td>The longest tumor control reported, in small series. An operation followed by 15 to 20 daily radiation sessions.</td><td class="ref">1</td></tr>
+    </tbody>
+  </table></div>
 
   <h4>A tumor that cannot be removed, in a cat fit for repeated anesthesia</h4>
-  <dl class="opts">
-    <dt>Accelerated radiation, 4.8 Gy in each of 10 daily sessions <span class="ref">[4]</span></dt>
-    <dd><b>Median 174 days; 29% alive at one year.</b> Twenty-one cats with tumors at any site; small (T1) tumors went 590 days before regrowing. Ten anesthesias over two weeks; mouth sores last two to four weeks and a feeding tube is usual.</dd>
-    <dt>Accelerated radiation with carboplatin <span class="ref">[5, 3]</span></dt>
-    <dd><b>Median 163 to 164 days; about 15% alive at one year.</b> Two series of 31 and 47 cats. Cats whose tumor disappeared completely lived a median of 379 days, and tonsil and cheek tumors did best. Fourteen or fifteen anesthesias over nine to ten days plus two chemotherapy doses; 78% needed a feeding tube and about one in five later suffered a jaw fracture.</dd>
-    <dt>Accelerated radiation alone <span class="ref">[12]</span></dt>
-    <dd><b>Median 86 days.</b> Nine cats; the three whose tumor disappeared completely lived a median of 298 days. Fourteen anesthesias over nine days.</dd>
-    <dt>Stereotactic radiation <span class="ref">[11]</span></dt>
-    <dd><b>Median 106 days.</b> Twenty cats. One to three anesthesias; symptoms ease quickly, but jaw fractures occurred.</dd>
-    <dt>Weekly radiation with zoledronate <span class="ref">[25]</span></dt>
-    <dd><b>Median 136 days.</b> Nine cats whose tumors had invaded bone. Four weekly anesthesias and two intravenous infusions; all side effects were mild.</dd>
-  </dl>
+  <div class="tbl"><table>
+    <colgroup><col style="width:30%"><col style="width:20%"><col style="width:44%"><col style="width:6%"></colgroup>
+    <thead><tr><th>Treatment</th><th>Median survival</th><th>What the study found</th><th>Ref.</th></tr></thead>
+    <tbody>
+      <tr><td>Accelerated radiation, 4.8 Gy in each of 10 daily sessions</td><td class="n">174 days; 29% alive at one year</td><td>Twenty-one cats. Small (T1) tumors went 590 days before regrowing. Ten anesthesias over two weeks; a feeding tube is usual.</td><td class="ref">4</td></tr>
+      <tr><td>Accelerated radiation with carboplatin</td><td class="n">163 to 164 days; about 15% alive at one year</td><td>Two series, 31 and 47 cats. Cats whose tumor disappeared lived a median of 379 days. Fourteen or fifteen anesthesias over nine to ten days; 78% needed a feeding tube; about one in five later had a jaw fracture.</td><td class="ref">5, 3</td></tr>
+      <tr><td>Accelerated radiation alone</td><td class="n">86 days</td><td>Nine cats. The three whose tumor disappeared lived a median of 298 days. Fourteen anesthesias over nine days.</td><td class="ref">12</td></tr>
+      <tr><td>Stereotactic radiation</td><td class="n">106 days</td><td>Twenty cats. One to three anesthesias. Symptoms ease quickly, but jaw fractures occurred.</td><td class="ref">11</td></tr>
+      <tr><td>Weekly radiation with zoledronate</td><td class="n">136 days</td><td>Nine cats whose tumors had invaded bone. Four weekly anesthesias and two infusions; side effects were mild.</td><td class="ref">25</td></tr>
+    </tbody>
+  </table></div>
 
   <h4>Comfort first, with little or no anesthesia</h4>
-  <dl class="opts">
-    <dt>Toceranib tablets, usually with meloxicam <span class="ref">[9]</span></dt>
-    <dd><b>Median 123 days, compared with 45 days without it; 20% alive at one year.</b> Forty-six cats, most not candidates for radiation. A tablet at home three days a week with periodic blood tests; mild stomach upset is the usual side effect.</dd>
-    <dt>Weekly palliative radiation <span class="ref">[8]</span></dt>
-    <dd><b>Median 113 days.</b> Fifty-four cats; tumors under the tongue gave 135 days and tumors of the lower jaw 80 days. Three or four weekly anesthesias; about half of the cats get relief.</dd>
-    <dt>Pain control, meloxicam and a feeding tube <span class="ref">[1]</span></dt>
-    <dd><b>About two to three months</b> of comfortable time, from general clinical experience rather than a trial. Daily medicine, and one short anesthesia if a tube is placed.</dd>
-    <dt>No treatment <span class="ref">[1, 2]</span></dt>
-    <dd><b>Median 30 to 60 days; under 10% alive at one year.</b></dd>
-  </dl>
+  <div class="tbl"><table>
+    <colgroup><col style="width:30%"><col style="width:20%"><col style="width:44%"><col style="width:6%"></colgroup>
+    <thead><tr><th>Treatment</th><th>Median survival</th><th>What the study found</th><th>Ref.</th></tr></thead>
+    <tbody>
+      <tr><td>Toceranib tablets, usually with meloxicam</td><td class="n">123 days (45 without); 20% alive at one year</td><td>Forty-six cats, most not candidates for radiation. A tablet at home three days a week; mild stomach upset is the usual side effect.</td><td class="ref">9</td></tr>
+      <tr><td>Weekly palliative radiation</td><td class="n">113 days</td><td>Fifty-four cats. Three or four weekly anesthesias; about half of the cats get relief.</td><td class="ref">8</td></tr>
+      <tr><td>Pain control, meloxicam and a feeding tube</td><td class="n">About two to three months</td><td>General clinical experience rather than a trial. Daily medicine, and one short anesthesia if a tube is placed.</td><td class="ref">1</td></tr>
+      <tr><td>No treatment</td><td class="n">30 to 60 days; under 10% alive at one year</td><td>Most cats stop eating within one to two months.</td><td class="ref">1, 2</td></tr>
+    </tbody>
+  </table></div>
   <p>Two findings apply across all three groups. A small tumor and a complete response to radiation are the strongest predictors of long survival, and the site of the tumor matters: tumors at the front of the lower jaw, on the tonsil and on the cheek do best, and tumors at the back of the lower jaw do worst. <span class="ref">[4, 5, 6, 8]</span></p>
   <div class="sources" data-refs="1 2 3 4 5 6 7 8 9 11 12 17 25 36"></div>
 </section>
