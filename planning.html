@@ -1,0 +1,277 @@
+<!doctype html>
+<title>Feline Oral SCC Planner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8">
+<meta name="build" content="1792632535">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+<style>
+/* Plain reading page: one column, one font, simple tables, no decoration. */
+:root { --bg: #fff; --fg: #222; --muted: #666; --line: #e3e3e3; --accent: #1a4f8a; color-scheme: light; }
+body { background: var(--bg); color: var(--fg); font: 16px/1.65 "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; }
+.wrap { max-width: 1000px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-size: 1.7rem; font-weight: 600; margin: 0 0 6px; line-height: 1.25; }
+.steps li { margin-bottom: 8px; }
+.box { border: 1px solid #cfd4da; border-left: 4px solid var(--accent); padding: 12px 16px; margin: 0 0 18px; }
+h2 { font-size: 1.3rem; font-weight: 600; margin: 0 0 16px; }
+h3 { font-size: 1.15rem; font-weight: 600; margin: 32px 0 10px; }
+h4 { font-size: 1rem; font-weight: 600; margin: 26px 0 8px; }
+p { margin: 0 0 14px; }
+ul { margin: 0 0 14px; padding-left: 1.3em; }
+li { margin-bottom: 4px; }
+.sub { color: var(--muted); margin-bottom: 20px; }
+.notice { font-size: .92rem; color: var(--muted); border-left: 2px solid var(--line); padding-left: 12px; margin: 0 0 28px; }
+nav ul { list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-wrap: wrap; gap: 4px 18px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+nav li { margin: 0; }
+nav a { color: var(--muted); text-decoration: none; font-size: .95rem; }
+nav a:hover { color: var(--accent); }
+nav a[aria-current="page"] { color: var(--fg); font-weight: 600; }
+a { color: var(--accent); }
+.tbl { margin: 0 0 22px; }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; border: 1px solid #cfd4da; overflow-wrap: break-word; }
+th, td { text-align: left; padding: 10px 12px; border: 1px solid #cfd4da; vertical-align: top; }
+th { font-weight: 600; background: #f3f5f7; }
+tbody tr:nth-child(even) td { background: #fafbfc; }
+table { table-layout: fixed; }
+td.n { font-variant-numeric: tabular-nums; }
+td.ref { font-size: .82rem; }
+table.facts th { background: #f3f5f7; font-weight: 600; color: var(--fg); font-size: .9rem; }
+
+.ref { color: var(--muted); font-size: .85em; }
+span.ref::before { content: "("; } span.ref::after { content: ")"; }
+.ref a { color: var(--accent); text-decoration: none; }
+.ref a:hover { text-decoration: underline; }
+.sources { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 14px; }
+.sources h3 { margin-top: 0; font-size: .9rem; color: var(--muted); }
+.sources ol { margin: 0; padding-left: 1.6em; font-size: .88rem; color: var(--muted); }
+.sources li { margin-bottom: 4px; }
+.pager { display: flex; justify-content: space-between; margin-top: 32px; font-size: .95rem; }
+.pager a { text-decoration: none; }
+footer { margin-top: 40px; font-size: .85rem; color: var(--muted); }
+section[hidden] { display: none; }
+.trial-links { margin: -4px 0 10px; display: flex; flex-wrap: wrap; gap: 10px; }
+.trial-link { display: inline-block; font-size: 1rem; font-weight: 600; color: #fff; background: var(--accent); padding: 8px 14px; border-radius: 4px; text-decoration: none; }
+.trial-link:hover { background: #163b5c; }
+@media (max-width: 640px) {
+  table, thead, tbody, tr, th, td { display: block; width: 100%; box-sizing: border-box; }
+  table { border: 0; }
+  colgroup { display: none; }
+  thead { position: absolute; left: -9999px; }
+  tr { border: 1px solid #cfd4da; border-radius: 4px; margin-bottom: 12px; }
+  td, th { border: 0; border-bottom: 1px solid #e3e3e3; padding: 8px 10px; }
+  tr > :last-child { border-bottom: 0; }
+  tbody tr:nth-child(even) td { background: #fff; }
+  td[data-h]::before { content: attr(data-h); display: block; font-size: .75rem; font-weight: 600; color: var(--muted); margin-bottom: 2px; }
+  table.facts th { background: #f3f5f7; }
+  table.facts td[data-h]::before { display: none; }
+}
+
+.opts { margin: 0 0 20px; }
+.opts dt { font-weight: 600; margin-top: 14px; }
+.opts dd { margin: 4px 0 0; }
+.opts dd b { font-weight: 600; }
+</style>
+
+<div class="wrap">
+<h1>Planning treatment for a cat with oral squamous cell carcinoma</h1>
+<p class="sub">A decision-focused draft: what to establish first, which situation the cat is in, what each option gives and costs, and who does it in the Pacific Northwest. Updated 21 October 2026.</p>
+<p class="notice">Research notes for discussion with a veterinary oncologist, not veterinary advice. Every number comes from a small, mostly retrospective study and links to it.</p>
+
+<nav aria-label="Pages"><ul>
+  <li><a href="#start" data-page="start">Start here</a></li>
+  <li><a href="#options" data-page="options">Options</a></li>
+  <li><a href="#comfort" data-page="comfort">Comfort care</a></li>
+  <li><a href="#where" data-page="where">Where to go</a></li>
+  <li><a href="#ask" data-page="ask">Questions to ask</a></li>
+  <li><a href="#sources" data-page="sources">Sources</a></li>
+</ul></nav>
+
+<section id="start" data-page="start">
+  <h2>Start here</h2>
+  <div class="box"><p>Oral squamous cell carcinoma (SCC) kills by growing where it is, not by spreading: in 49 advanced cases, 41 cats died of the tumor in the mouth. So the first question is whether the tumor can be removed or controlled locally, and that depends on three things a general practice usually cannot tell you: exactly how far it extends into bone, whether the jaw lymph nodes are involved, and whether the cat can take anesthesia. <span class="ref">[62]</span></p></div>
+  <h3>Three things to establish before choosing</h3>
+  <ol class="steps">
+    <li><strong>A head CT at the hospital that would treat.</strong> The visible lump underestimates the tumor; the CT decides whether surgery or radiation is possible and is used to plan either. <span class="ref">[1, 36]</span></li>
+    <li><strong>Staging.</strong> A needle sample of both jaw lymph nodes whether or not they feel enlarged, chest X-rays or a chest CT, and blood and urine tests. <span class="ref">[1]</span></li>
+    <li><strong>Anesthetic fitness.</strong> Every surgical and radiation option needs one to fifteen anesthesias; kidney, heart and thyroid status set the limits. <span class="ref">[3, 4]</span></li>
+  </ol>
+  <h3>Which situation is the cat in?</h3>
+  <div class="tbl"><table>
+    <colgroup><col style="width:30%"><col style="width:40%"><col style="width:30%"></colgroup>
+    <thead><tr><th>Situation</th><th>How to recognize it</th><th>Realistic goal</th></tr></thead>
+    <tbody>
+      <tr><td data-h="Situation">A. Small tumor a surgeon judges removable</td><td data-h="How to recognize it">Usually under 2 cm and at the front of the lower or upper jaw; no node or lung spread on staging. A minority of cats. <span class="ref">[6, 36]</span></td><td data-h="Realistic goal">A year or more. Median 217 days after lower-jaw surgery (911 days for front-of-jaw tumors); 83% alive at two years after upper-jaw surgery. <span class="ref">[6, 36]</span></td></tr>
+      <tr><td data-h="Situation">B. Not removable, cat fit for repeated anesthesia</td><td data-h="How to recognize it">Tumor too large or too far back to take with a margin, but staging clear and organs sound. <span class="ref">[4, 5]</span></td><td data-h="Realistic goal">Five to six months median with accelerated radiation; much longer if the tumor is small or disappears completely. <span class="ref">[4, 5]</span></td></tr>
+      <tr><td data-h="Situation">C. Comfort first</td><td data-h="How to recognize it">Advanced tumor, spread already present, poor anesthetic risk, or an owner who declines hospital courses. Most cats at diagnosis. <span class="ref">[1, 61]</span></td><td data-h="Realistic goal">Two to four months of eating and grooming comfortably; 30 to 60 days without treatment. <span class="ref">[1, 9, 59]</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>Two facts cut across the situations: a small tumor and a complete response to radiation are the strongest predictors of long survival, and site matters (front of the lower jaw, tonsil and cheek do best; under the tongue and back of the lower jaw do worst). <span class="ref">[4, 5, 8, 61]</span></p>
+  <div class="sources" data-refs="1 3 4 5 6 8 9 36 59 61 62"></div>
+</section>
+
+<section id="options" data-page="options">
+  <h2>Options by situation</h2>
+  <p>Each entry gives what the cat goes through, what to expect, what it costs, and where it is done. Prices are United States list prices and published 2026 cost surveys, before insurance. <span class="ref">[57]</span></p>
+
+  <h3>Situation A: surgery</h3>
+  <div class="tbl"><table class="facts"><colgroup><col style="width:17%"><col style="width:83%"></colgroup><tbody><tr><th>Maxillectomy (part of the upper jaw)</th><td>Thirteen SCC cats: median survival not reached, 83% alive at one and two years. One operation; poor appetite for about a week; the wound breaks down in 20%; the face is visibly changed. <span class="ref">[36]</span></td></tr><tr><th>Mandibulectomy (part of the lower jaw)</th><td>Twenty-one SCC cats: median 217 days, 43% alive at one year, 911 days for front-of-jaw tumors. One operation; 41% needed a feeding tube, 12% never ate on their own again; 83% of owners were satisfied. <span class="ref">[6]</span></td></tr><tr><th>Radical options</th><td>Removing 75 to 90% of the lower jaw (8 cats, mean 712 days) or the whole lower jaw and tongue (20 cats, median 533 days) gives the longest survivals in the literature at the cost of permanent tube feeding and daily home care. <span class="ref">[2, 63]</span></td></tr><tr><th>What decides it</th><td>A clean margin: after lower-jaw surgery the tumor returned in 9 of 16 cats with incomplete margins and 4 of 17 with clean ones. Plan a bone margin of about 1 cm from the CT. If margins come back incomplete, ask about radiation to the site. <span class="ref">[6, 36]</span></td></tr><tr><th>Cost and where</th><td>A referral-level operation at a specialty or university surgical service; price is quoted after the CT. Specialty surgery in cats commonly runs $3,000 to $8,000 including imaging and hospitalization; ask for the itemized estimate. <span class="ref">[57]</span></td></tr></tbody></table></div>
+
+  <h3>Situation B: radiation</h3>
+  <div class="tbl"><table class="facts"><colgroup><col style="width:17%"><col style="width:83%"></colgroup><tbody><tr><th>Accelerated radiation, 4.8 Gy in each of 10 daily sessions</th><td>Twenty-one cats: median 174 days, 29% alive at one year; small (T1) tumors went 590 days before regrowing. Ten anesthesias over two weeks; mouth sores for two to four weeks; a feeding tube is usual. <span class="ref">[4]</span></td></tr><tr><th>Accelerated radiation with carboplatin</th><td>Two series of 31 and 47 cats: median 163 to 164 days, about 15% alive at one year; cats whose tumor disappeared lived a median of 379 days; tonsil and cheek tumors did best. Fourteen or fifteen anesthesias over nine to ten days plus two chemotherapy doses; 78% needed a feeding tube; about one in five later had a jaw fracture. Developed and still run at Washington State University. <span class="ref">[3, 5]</span></td></tr><tr><th>What to expect</th><td>Painful mouth inflammation for two to four weeks is nearly universal; most clinics place the feeding tube before starting. Later: white fur, skin scarring, and in a minority bone death and jaw fractures. <span class="ref">[3, 4]</span></td></tr><tr><th>What not to add</th><td>Toceranib after radiation did not lengthen survival (208 versus 162 days), except that tongue tumors regrew later. Gemcitabine and the bleomycin-piroxicam-thalidomide combination added toxicity without benefit. <span class="ref">[3]</span></td></tr><tr><th>Cost and where</th><td>Only at hospitals with a linear accelerator: in Oregon and Washington that means Clackamas and Pullman. A full curative course is $5,000 to $10,000 at 2026 survey prices, plus a planning CT ($800 to $2,500) and consultation ($150 to $300). <span class="ref">[57, 80, 82]</span></td></tr></tbody></table></div>
+
+  <h3>Situation C: comfort first</h3>
+  <div class="tbl"><table class="facts"><colgroup><col style="width:17%"><col style="width:83%"></colgroup><tbody><tr><th>Weekly palliative radiation</th><td>Three or four weekly anesthesias; about half of cats get relief; median two to four months (113 days alone in a 54-cat series). A course is $1,000 to $3,000, up to $5,000 at some specialty networks. <span class="ref">[8, 57]</span></td></tr><tr><th>Toceranib tablets with meloxicam</th><td>Forty-six cats: median 123 days against 45 without, 20% alive at one year; most of the "responses" were stable disease, and NSAID use confounds the result. A tablet at home three days a week; about $115 a month for a 4 to 5 kg cat plus monitoring bloodwork. <span class="ref">[9, 55]</span></td></tr><tr><th>Pain control, meloxicam and a feeding tube</th><td>The universal baseline, covered on the Comfort care page. About two to three months of comfortable time from general experience. <span class="ref">[1, 38]</span></td></tr><tr><th>Zoledronate if the tumor is in bone</th><td>Nine cats with weekly radiation: 44% partial response, median 136 days, mild side effects. A 15-minute infusion about monthly; the drug is cheap if the clinic splits vials, the visit $150 to $400. <span class="ref">[25, 56]</span></td></tr></tbody></table></div>
+  <div class="sources" data-refs="1 2 3 4 5 6 8 9 25 36 38 55 56 57 63 80 82"></div>
+</section>
+
+<section id="comfort" data-page="comfort">
+  <h2>Comfort care in every plan</h2>
+  <p>Whichever situation the cat is in, these run alongside. Pain is the usual reason a cat stops eating and grooming. All drugs need a veterinary prescription. <span class="ref">[38]</span></p>
+  <div class="tbl"><table class="facts"><colgroup><col style="width:17%"><col style="width:83%"></colgroup><tbody><tr><th>Pain relief</th><td>Buprenorphine by mouth every eight hours (controlled; from the clinic or a compounding pharmacy, roughly $20 to $40 for a few days), gabapentin as an add-on ($35 to $79 for compounded liquid at Chewy), antibiotics when the tumor surface is infected. <span class="ref">[38, 47, 49]</span></td></tr><tr><th>Meloxicam</th><td>The one medicine with a consistent survival association: an NSAID after diagnosis halved the risk of death at any time in 54 general-practice cats (hazard ratio 0.46), and every one-year survivor in the toceranib study had one. Low daily doses have not sped up kidney disease in older cats in long-term studies; kidney values are checked every few months. Not with steroids. About $31 to $41 a bottle, which lasts months. <span class="ref">[59, 9, 40, 41, 50]</span></td></tr><tr><th>Feeding tube</th><td>A tube through the neck into the esophagus, placed under one short anesthesia ($500 to $800). Food, water and medicine bypass the mouth. In 248 cats, 36% had a complication, mostly the tube coming out or a skin infection; none died of it; 96% of owners were comfortable managing one. It should be placed before the cat stops eating, and the main practice sources advise against using it to prolong life once the tumor itself prevents eating. <span class="ref">[38, 42, 52, 69]</span></td></tr><tr><th>Appetite</th><td>Mirtazapine ointment in the ear once daily: 3.9% weight gain in two weeks against 0.4% on placebo in 177 cats. $53 a tube, less on autoship. <span class="ref">[43, 54]</span></td></tr></tbody></table></div>
+  <div class="sources" data-refs="9 38 40 41 42 43 47 49 50 52 54 59 69"></div>
+</section>
+
+<section id="where" data-page="where">
+  <h2>Where to go in the Pacific Northwest</h2>
+  <p>Radiation for pets exists at two sites in Oregon and Washington combined. Medical oncologists (chemotherapy, toceranib, comfort care, referral for radiation) are in Portland, Vancouver, Seattle, Tacoma, Bellevue and Spokane. <span class="ref">[81]</span></p>
+  <div class="tbl"><table class="facts"><colgroup><col style="width:17%"><col style="width:83%"></colgroup><tbody><tr><th>Washington State University, Pullman</th><td>The hospital that developed the accelerated radiation plus carboplatin protocol; its radiation oncologist is senior author of both outcome series. New linear accelerator since 2023; lists feline oral SCC among cancers treated. No referral needed for a second opinion. 509-335-0711. About 390 miles from Corvallis. <span class="ref">[3, 5, 82, 83, 84]</span></td></tr><tr><th>VCA Northwest Veterinary Specialists, Clackamas</th><td>Intensity-modulated, stereotactic and palliative radiation for cats under a board-certified radiation oncologist. Referral through the primary veterinarian. 503-656-3999. About 85 miles from Corvallis. <span class="ref">[80]</span></td></tr><tr><th>Pacific Northwest Pet ER and Specialty Center, Vancouver, WA</th><td>Medical oncologist whose residency research included feline oral SCC; chemotherapy, targeted drugs, palliative care; 10 miles from the Clackamas radiation unit. 360-635-5302. <span class="ref">[85, 89]</span></td></tr><tr><th>Seattle area</th><td>Medical oncology at Veterinary Specialty Center of Seattle in Lynnwood (425-697-6106), Bellevue Veterinary Emergency and Specialty, Animal Medical Center of Seattle, and Summit in Tacoma (253-983-1114). A stereotactic radiation unit was announced for Lynnwood for early 2026 and is not yet confirmed open; call. <span class="ref">[85, 86, 87]</span></td></tr><tr><th>Spokane</th><td>Pet Emergency Clinic, referral-only medical oncology, 509-326-7246; radiation 75 miles away at WSU. <span class="ref">[90]</span></td></tr></tbody></table></div>
+  <h3>Trials worth a phone call</h3>
+  <p>No trial for this cancer exists west of Colorado, and every trial requires repeated visits at its hospital. These are the ones listed as open in October 2026 that a committed owner could consider; none is confirmed by phone. <span class="ref">[22, 37]</span></p>
+  <h3>Colorado State University, Fort Collins: immunotherapy injected into the tumor</h3>
+  <p class="trial-links"><a class="trial-link" href="https://veterinaryclinicaltrials.org/study/VCT26005965" target="_blank" rel="noopener">Registry listing &rarr;</a></p>
+  <p>Four injections under anesthesia, one every three weeks, with CT scans and biopsies. Needs a reachable tumor, no spread beyond local nodes, sound kidneys and liver. Owner pays diagnosis; families are expected to live within about 150 miles or relocate. Recruiting August 2026 to December 2027. csuoncologytrials@colostate.edu, 970-297-4001. <span class="ref">[22, 37]</span></p>
+  <h3>University of Illinois, Urbana: three-day radiation with olaparib and bexagliflozin</h3>
+  <p class="trial-links"><a class="trial-link" href="https://vetmed.illinois.edu/wp-content/uploads/2025/01/OSCC-RT-Olap-and-Bexacat.pdf" target="_blank" rel="noopener">Trial flyer (PDF) &rarr;</a></p>
+  <p>Three consecutive daily radiation sessions plus two tablets at home; the trial pays for radiation, the feeding tube and the drugs. Excludes diabetes and kidney disease at IRIS stage 2 or worse. 18 cats planned. Rebecca Kamerer, 217-300-6453. <span class="ref">[70]</span></p>
+  <h3>University of Pennsylvania, Philadelphia: pain study with palliative radiation</h3>
+  <p class="trial-links"><a class="trial-link" href="https://www.vet.upenn.edu/clinical-trial/pilot-study-of-frunevetmab-solensia-and-meloxicam-for-palliative-therapy-of-feline-bone-invasive-oral-squamous-cell-carcinomas/" target="_blank" rel="noopener">Trial page &rarr;</a></p>
+  <p>The study pays for six palliative radiation sessions, meloxicam and the trial antibody or placebo; the owner pays initial staging. For jaw tumors with bone destruction on CT and no spread. Six visits over 56 days. 215-573-0302. <span class="ref">[71]</span></p>
+  <div class="sources" data-refs="3 5 22 37 70 71 80 81 82 83 84 85 86 87 89 90"></div>
+</section>
+
+<section id="ask" data-page="ask">
+  <h2>Questions to ask the oncologist</h2>
+  <ol class="steps">
+    <li>On the CT, can this tumor be removed with about a 1 cm bone margin, and if so which procedure? What did the lymph node samples and chest imaging show? <span class="ref">[1, 36]</span></li>
+    <li>If surgery is possible, what is the expected eating recovery for this procedure, how likely is a feeding tube, and for how long? <span class="ref">[6, 36]</span></li>
+    <li>If not, is the tumor small enough (under 2 cm) that a curative-intent radiation course is justified, and which protocol does this hospital use? <span class="ref">[4, 5]</span></li>
+    <li>How many anesthesias will the plan need, and is this cat's kidney, heart and thyroid status good enough for them? <span class="ref">[3, 4]</span></li>
+    <li>Will a feeding tube be placed before treatment starts, and who teaches me to use it? <span class="ref">[38, 42]</span></li>
+    <li>What pain plan starts today, and can meloxicam be used given the kidney values? <span class="ref">[38, 40]</span></li>
+    <li>What is the itemized cost of the plan, and what does the first month of comfort-only care cost by comparison? <span class="ref">[57]</span></li>
+    <li>At what point would you consider the cat's quality of life no longer acceptable, and how will we recognize it? <span class="ref">[38]</span></li>
+  </ol>
+  <div class="sources" data-refs="1 3 4 5 6 36 38 40 42 57"></div>
+</section>
+
+<section id="sources" data-page="sources">
+  <h2>Sources</h2>
+  <p>Numbering matches the full research site, so entries are not consecutive.</p>
+  <ol id="reflist" style="padding-left:1.6em;font-size:.92rem">
+    <li value="1" id="r1" data-label="Today's Veterinary Practice"><a href="https://todaysveterinarypractice.com/oncology/feline-oral-squamous-cell-carcinoma/">A Review of Feline Oral SCC</a>, Today's Veterinary Practice.</li>
+    <li value="2" id="r2" data-label="Tutu et al. 2025">Tutu P, Daraban Bocaneti F, et al. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12554573/">Feline oral SCC: recent advances and future perspectives</a>. Front Vet Sci 2025;12:1663990.</li>
+    <li value="3" id="r3" data-label="Schlueter et al. 2025">Schlueter A, Hanot C, Sellon R, Fidel J. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11970090/">Accelerated radiation and carboplatin with and without follow-up toceranib</a>. J Feline Med Surg 2025.</li>
+    <li value="4" id="r4" data-label="Poirier et al. 2013">Poirier VJ, Kaser-Hotz B, Vail DM, Straw RC. <a href="https://pubmed.ncbi.nlm.nih.gov/23078236/">Accelerated hypofractionated RT in cats with oral SCC</a>. Vet Radiol Ultrasound 2013;54:81–88.</li>
+    <li value="5" id="r5" data-label="Fidel et al. 2011">Fidel J, et al. <a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1939-1676.2011.0721.x">Accelerated radiation therapy and concomitant carboplatin in cats</a>. J Vet Intern Med 2011;25:504–510.</li>
+    <li value="6" id="r6" data-label="Northrup et al. 2006">Northrup NC, et al. <a href="https://pubmed.ncbi.nlm.nih.gov/16960038/">Outcomes of cats with oral tumors treated with mandibulectomy: 42 cases</a>. JAAHA 2006;42:350–360.</li>
+    <li value="8" id="r8" data-label="Sabhlok & Ayl 2014"><a href="https://pubmed.ncbi.nlm.nih.gov/24766180/">Palliative radiation therapy outcomes for cats with oral SCC (1999–2005)</a>. Vet Radiol Ultrasound 2014.</li>
+    <li value="9" id="r9" data-label="Wiles et al. 2017">Wiles V, Hohenhaus A, et al. <a href="https://journals.sagepub.com/doi/10.1177/1098612X15622237">Toceranib phosphate in cats with oral SCC</a>. J Feline Med Surg 2017.</li>
+    <li value="11" id="r11" data-label="Yoshikawa et al. 2013">Yoshikawa H, et al. <a href="https://pubmed.ncbi.nlm.nih.gov/23815402/">Predictive molecular variables in feline oral SCC treated with stereotactic RT</a>. Vet Comp Oncol 2013.</li>
+    <li value="12" id="r12" data-label="Fidel et al. 2007">Fidel J, et al. <a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1740-8261.2007.00283.x">A nine-day accelerated radiation protocol for feline SCC</a>. Vet Radiol Ultrasound 2007.</li>
+    <li value="14" id="r14" data-label="UF trial page"><a href="https://research.vetmed.ufl.edu/feline-rna-nanoparticle-vaccine-against-oral-squamous-cell-carcinoma/">UF feline RNA nanoparticle vaccine trial</a>.</li>
+    <li value="15" id="r15" data-label="Illinois trial flyer"><a href="https://vetmed.illinois.edu/wp-content/uploads/2025/11/canine-and-feline-squamous-cell-carcinoma-.pdf">Illinois intratumoral nanoparticle trial flyer</a> (Nov 2025).</li>
+    <li value="22" id="r22" data-label="CSU trials page"><a href="https://www.csuanimalcancercenter.org/current-clinical-trials/">CSU Flint Animal Cancer Center current clinical trials</a>; "Novel Immunotherapy for Cats with Oral SCC" (PI Steve Dow).</li>
+    <li value="25" id="r25" data-label="Lundberg et al. 2022">Lundberg AP, et al. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9796441/">Combining radiation therapy with zoledronate for osteo-invasive feline oral SCC</a>. Vet Comp Oncol 2022;20:788–796.</li>
+    <li value="26" id="r26" data-label="Missouri registry listing"><a href="https://veterinaryclinicaltrials.org/s/foscc-lattice-929575/">FOSCC Lattice</a>, University of Missouri (PI Charlie Maitz), registry listing.</li>
+    <li value="36" id="r36" data-label="Liptak et al. 2021">Liptak JM, Thatcher GP, Mestrinho LA, et al. <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/vco.12634">Outcomes of cats treated with maxillectomy: 60 cases. A Veterinary Society of Surgical Oncology retrospective study</a>. Vet Comp Oncol 2021;19:641–650.</li>
+    <li value="37" id="r37" data-label="Registry VCT26005965"><a href="https://veterinaryclinicaltrials.org/study/VCT26005965">Novel Immunotherapy for Cats with Oral Squamous Cell Carcinoma</a>, AVMA Veterinary Clinical Trials Registry VCT26005965, Colorado State University. Recruiting Aug 2026–Dec 2027.</li>
+    <li value="38" id="r38" data-label="International Cat Care"><a href="https://icatcare.org/resources/icatcare_feline_oral_squamous_cell_carcinoma_handout.pdf">Feline oral squamous cell carcinoma</a>, International Cat Care handout (Alison M. Lee).</li>
+    <li value="40" id="r40" data-label="Gowan et al. 2012">Gowan RA, et al. <a href="https://pubmed.ncbi.nlm.nih.gov/22821331/">Retrospective analysis of the effects of meloxicam on the longevity of aged cats with and without overt chronic kidney disease</a>. J Feline Med Surg 2012;14:876–881.</li>
+    <li value="41" id="r41" data-label="Keepman & Pellin 2022">Keepman SJ, Pellin MA. <a href="https://journals.sagepub.com/doi/full/10.1177/1098612X211067023">Low dose meloxicam is safe and tolerable when combined with toceranib phosphate in cancer-bearing cats</a>. J Feline Med Surg 2022.</li>
+    <li value="42" id="r42" data-label="Breheny et al. 2019">Breheny CR, et al. <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jvim.15496">Esophageal feeding tube placement and the associated complications in 248 cats</a>. J Vet Intern Med 2019;33:1306–1314.</li>
+    <li value="43" id="r43" data-label="Poole et al. 2019">Poole M, Quimby JM, et al. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7379659/">A double-blind, placebo-controlled, randomized study to evaluate mirtazapine transdermal ointment in cats with unintended weight loss</a>. J Vet Pharmacol Ther 2019;42:179–188.</li>
+    <li value="44" id="r44" data-label="Olmsted et al. 2017">Olmsted GA, Farrelly J, Post GS, Smith J. <a href="https://journals.sagepub.com/doi/10.1177/1098612X16638118">Tolerability of toceranib phosphate when used in conjunction with other therapies in 35 cats with feline oral squamous cell carcinoma</a>. J Feline Med Surg 2017.</li>
+    <li value="45" id="r45" data-label="Wypij et al. 2014">Wypij JM, et al. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4071848/">Pamidronate disodium for palliative therapy of feline bone-invasive tumors</a>. Vet Med Int 2014.</li>
+    <li value="47" id="r47" data-label="VetLens"><a href="https://www.vetlens.com/blog/buprenorphine-for-cats">Buprenorphine for cats: dosage, side effects and cost</a>, VetLens.</li>
+    <li value="49" id="r49" data-label="Chewy: gabapentin"><a href="https://www.chewy.com/gabapentin-compounded-oral-liquid/dp/3940326">Gabapentin compounded oral suspension 100 mg/mL</a>, Chewy pharmacy.</li>
+    <li value="50" id="r50" data-label="GoodRx: Metacam"><a href="https://www.goodrx.com/metacam">Metacam prices and coupons</a>, GoodRx.</li>
+    <li value="52" id="r52" data-label="Wag: feeding tubes"><a href="https://wagwalking.com/cat/treatment/feeding-tubes">Feeding tubes in cats: procedure, efficacy, cost</a>, Wag.</li>
+    <li value="54" id="r54" data-label="Chewy: Mirataz"><a href="https://www.chewy.com/mirataz-mirtazapine-transdermal/dp/322163">Mirataz 5 g tube</a>, Chewy; <a href="https://www.allivet.com/product/mirataz-100-mg-tube-in-5-gram-tube-20-mg-per-1-gram/51402.html">Allivet</a>; <a href="https://www.vetrxdirect.com/product/view/mirataz-mirtazapine-transdermal-ointment-for-cats-rx">VetRxDirect</a>.</li>
+    <li value="55" id="r55" data-label="Chewy: Palladia"><a href="https://www.chewy.com/palladia-toceranib-phosphate-tablets/dp/173063">Palladia 10 mg tablets</a> and <a href="https://www.chewy.com/palladia-tablets-dogs/dp/173062">15 mg tablets</a>, Chewy; <a href="https://www.walmart.com/ip/Palladia-15-mg-Tablet/9415560950">Walmart pharmacy</a>.</li>
+    <li value="56" id="r56" data-label="EntirelyPets: zoledronic acid"><a href="https://entirelypetspharmacy.com/zoledronic-acid-injection-4mg-5ml-5-ml.html">Zoledronic acid injection 4 mg/5 mL</a>, EntirelyPets Pharmacy; <a href="https://www.merckvetmanual.com/generalized-conditions/paraneoplastic-disorders-in-small-animals/endocrinological-paraneoplastic-syndromes-in-small-animals">dosing</a>, Merck Veterinary Manual.</li>
+    <li value="57" id="r57" data-label="Vety 2026"><a href="https://vety.com/costs/cat-cancer-treatment-cost">How much does cat cancer treatment cost? (2026)</a>, Vety; <a href="https://vetreceipt.com/costs/cat-cancer-treatment">real vet bills</a>, VetReceipt.</li>
+    <li value="59" id="r59" data-label="Hayes et al. 2007">Hayes AM, Adams VJ, Scase TJ, Murphy S. <a href="https://doi.org/10.1111/j.1748-5827.2007.00393.x">Survival of 54 cats with oral squamous cell carcinoma in United Kingdom general practice</a>. J Small Anim Pract 2007;48:394–399.</li>
+    <li value="61" id="r61" data-label="Munday et al. 2019">Munday JS, et al. <a href="https://doi.org/10.1016/j.tvjl.2019.04.007">Oral squamous cell carcinomas in cats: survival by location and p16 status</a>. Vet J 2019.</li>
+    <li value="62" id="r62" data-label="Soltero-Rivera et al. 2014">Soltero-Rivera MM, Krick EL, Reiter AM, Brown DC, Lewis JR. <a href="https://doi.org/10.1177/1098612X13502975">Prevalence of regional and distant metastasis in cats with advanced oral squamous cell carcinoma: 49 cases</a>. J Feline Med Surg 2014;16:164–169.</li>
+    <li value="63" id="r63" data-label="Iwata et al. 2025">Iwata T, et al. <a href="https://doi.org/10.1111/vco.13043">Outcomes and surgical complications of cats with oral SCC treated with total glosso-mandibulectomy: 20 cases</a>. Vet Comp Oncol 2025;23:178–186.</li>
+    <li value="69" id="r69" data-label="Ireland et al. 2003">Ireland LM, et al. <a href="https://jaaha.kglmeridian.com/view/journals/aaha/39/3/article-p241.xml">Owner management and complications in 67 cats with esophagostomy and PEG feeding tubes</a>. JAAHA 2003;39:241–246.</li>
+    <li value="70" id="r70" data-label="Illinois olaparib flyer">University of Illinois. <a href="https://vetmed.illinois.edu/wp-content/uploads/2025/01/OSCC-RT-Olap-and-Bexacat.pdf">Evaluation of SBRT, olaparib and bexagliflozin in bulky oral SCC in cats</a>, trial flyer, January 2025; <a href="https://www.ideals.illinois.edu/items/139697">related thesis record</a>, December 2025.</li>
+    <li value="71" id="r71" data-label="Penn Vet trial page">University of Pennsylvania. <a href="https://www.vet.upenn.edu/clinical-trial/pilot-study-of-frunevetmab-solensia-and-meloxicam-for-palliative-therapy-of-feline-bone-invasive-oral-squamous-cell-carcinomas/">Pilot study of frunevetmab and meloxicam for palliative therapy of feline bone-invasive oral SCC</a>.</li>
+    <li value="72" id="r72" data-label="NC State PIVOT-C">NC State College of Veterinary Medicine. <a href="https://cvm.ncsu.edu/clinical-trial/pivot-c-pilot-intratumoral-vaccine-therapy-for-oral-tumors-in-cats/">PIVOT-C: pilot intratumoral vaccine therapy for oral tumors in cats</a>.</li>
+    <li value="75" id="r75" data-label="Ontario Veterinary College 2024">University of Guelph. <a href="https://www.uoguelph.ca/ovc/news/node/3724">Porphysome photodynamic therapy trial for cats with oral SCC</a>, August 2024.</li>
+    <li value="80" id="r80" data-label="VCA Northwest Veterinary Specialists">VCA Northwest Veterinary Specialists, Clackamas. <a href="https://vcahospitals.com/northwest-veterinary-specialists/departments/radiation-oncology">Radiation oncology</a>.</li>
+    <li value="82" id="r82" data-label="WSU oncology">Washington State University Veterinary Teaching Hospital. <a href="https://hospital.vetmed.wsu.edu/small-animal/cats-and-dogs/oncology/">Oncology</a> and <a href="https://hospital.vetmed.wsu.edu/2021/05/24/radiation-therapy/">Radiation therapy</a>.</li>
+    <li value="83" id="r83" data-label="WSU News 2023">Washington State University. <a href="https://news.wsu.edu/news/2023/10/05/wsu-veterinary-hospital-installs-new-cancer-fighting-technology/">WSU veterinary hospital installs new cancer-fighting technology</a>, October 2023.</li>
+    <li value="84" id="r84" data-label="WSU referrals">Washington State University Veterinary Teaching Hospital. <a href="https://hospital.vetmed.wsu.edu/for-veterinarians/">For veterinarians: referrals</a>.</li>
+    <li value="85" id="r85" data-label="CCR Alliance directory">Canine Cancer Research Alliance. <a href="https://www.ccralliance.org/post/find-veterinary-cancer-specialists-in-seattle-and-the-pacific-northwest">Veterinary oncologists in Seattle and the Pacific Northwest</a>.</li>
+    <li value="86" id="r86" data-label="Thrive / VSC Seattle">Thrive Pet Healthcare. <a href="https://www.thrivepetcare.com/locations/washington/lynnwood/veterinary-specialty-center-seattle/vsc-seattle-specialty-care">Veterinary Specialty Center of Seattle, specialty care</a>; <a href="https://www.summitvets.com/services/oncology">Summit Veterinary Referral Center oncology</a>.</li>
+    <li value="87" id="r87" data-label="Thrive and Empyrean 2025">Thrive Pet Healthcare. <a href="https://www.thrivepetcare.com/thrive-guide/thrive-pet-healthcare-and-empyrean-medical-systems-partnership">Partnership with Empyrean Medical Systems: Sirius radiation system to open at VSC Seattle in early 2026</a>, November 2025; <a href="https://www.dvm360.com/view/human-grade-precision-radiation-therapy-technology-to-debut">dvm360 report</a>.</li>
+    <li value="89" id="r89" data-label="Pacific Northwest Pet ER">Pacific Northwest Pet ER and Specialty Center, Vancouver. <a href="https://www.pacificnwvets.com/staff/ashley-parker">Dr. Ashley Parker</a>; <a href="https://wsvma.org/sponsored-content-pacific-northwest-pet-er-specialty-center-is-here/">oncology services announcement</a>.</li>
+    <li value="90" id="r90" data-label="Pet Emergency Clinic Spokane">Pet Emergency Clinic, Spokane. <a href="https://petemergencyspokane.com/veterinary-oncologist-in-spokane-wa/">Veterinary oncologist in Spokane</a>.</li>
+  </ol>
+</section>
+
+<div class="pager" id="pager"></div>
+<footer>Draft planning view of <a href="./">the full research site</a>. Each citation links to its source.</footer>
+</div>
+
+<script>
+(function(){
+  var order=['start','options','comfort','where','ask','sources'];
+  var labels={start:'Start here',options:'Options',comfort:'Comfort care',where:'Where to go',ask:'Questions to ask',sources:'Sources'};
+  var secs=document.querySelectorAll('section[data-page]');
+  var links=document.querySelectorAll('nav a[data-page]');
+  var pager=document.getElementById('pager');
+  // Turn every bracketed citation like [3, 17] into named links that open the source itself.
+  var hrefOf={}, labelOf={};
+  document.querySelectorAll('#reflist li[id^="r"]').forEach(function(li){ var a=li.querySelector('a[href]'); var n=li.id.slice(1); hrefOf[n]=a?a.href:('#'+li.id); labelOf[n]=li.dataset.label||('source '+n); });
+  function linkify(node){
+    node.innerHTML=node.innerHTML.replace(/\[([\d,\s]+)\]/g,function(m,inner){
+      return inner.split(',').map(function(x){ var n=x.trim(); if(!hrefOf[n]) return n; return '<a href="'+hrefOf[n]+'" target="_blank" rel="noopener">'+labelOf[n]+'</a>'; }).join('; ');
+    });
+  }
+  document.querySelectorAll('span.ref, td.ref, p.ref').forEach(function(el){
+    if(el.tagName==='TD' && !/\[/.test(el.textContent)) el.innerHTML='['+el.innerHTML+']';
+    linkify(el);
+  });
+  // Fill each page's "Sources" box from the master list.
+  document.querySelectorAll('.sources[data-refs]').forEach(function(box){
+    var nums=box.dataset.refs.split(' ');
+    var h=document.createElement('h3'); h.textContent='Sources on this page'; box.appendChild(h);
+    var ol=document.createElement('ol');
+    nums.forEach(function(n){ var src=document.getElementById('r'+n); if(!src) return; var li=document.createElement('li'); li.value=n; li.innerHTML=src.innerHTML; ol.appendChild(li); });
+    box.appendChild(ol);
+  });
+  function show(pg){
+    if(order.indexOf(pg)<0) pg='overview';
+    secs.forEach(function(s){ s.hidden = s.dataset.page!==pg; });
+    links.forEach(function(a){ if(a.dataset.page===pg) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+    var i=order.indexOf(pg), prev=order[i-1], next=order[i+1];
+    pager.innerHTML=(prev?'<a href="#'+prev+'">← '+labels[prev]+'</a>':'<span></span>')+(next?'<a href="#'+next+'">'+labels[next]+' →</a>':'<span></span>');
+  }
+  function fromHash(){ var h=(location.hash||'').replace('#',''); var el=document.getElementById(h); var pg=el&&el.closest('section[data-page]')?el.closest('section[data-page]').dataset.page:h; show(pg); if(el&&h!==pg) el.scrollIntoView(); else window.scrollTo(0,0); }
+  window.addEventListener('hashchange', fromHash);
+  document.addEventListener('click', function(e){ var a=e.target.closest('a[href^="#"]'); if(!a) return; var h=a.getAttribute('href').slice(1); e.preventDefault(); if(location.hash==='#'+h) fromHash(); else location.hash=h; });
+  fromHash();
+  // Reload open tabs when a newer build is published (GitHub Pages copy only).
+  var build=(document.querySelector('meta[name="build"]')||{}).content;
+  if(build && location.protocol.indexOf('http')===0 && location.hostname.indexOf('github.io')>0){
+    setInterval(function(){
+      fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.text();}).then(function(t){
+        var m=t.match(/<meta name="build" content="(\d+)">/); if(m&&m[1]!==build) location.reload();
+      }).catch(function(){});
+    },120000);
+  }
+})();
+</script>
