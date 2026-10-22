@@ -9,7 +9,8 @@ body { background: var(--bg); color: var(--fg); font: 16px/1.65 "Inter", system-
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 h1 { font-size: 1.7rem; font-weight: 600; margin: 0 0 6px; line-height: 1.25; }
 h2 { font-size: 1.3rem; font-weight: 600; margin: 0 0 16px; }
-h3 { font-size: 1.05rem; font-weight: 600; margin: 28px 0 8px; }
+h3 { font-size: 1.15rem; font-weight: 600; margin: 32px 0 10px; }
+h4 { font-size: .95rem; font-weight: 600; margin: 24px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
 p { margin: 0 0 14px; }
 ul { margin: 0 0 14px; padding-left: 1.3em; }
 li { margin-bottom: 4px; }
@@ -26,7 +27,9 @@ table { border-collapse: collapse; width: 100%; font-size: .92rem; border: 1px s
 th, td { text-align: left; padding: 10px 12px; border: 1px solid #cfd4da; vertical-align: top; }
 th { font-weight: 600; background: #f3f5f7; }
 tbody tr:nth-child(even) td { background: #fafbfc; }
-td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
+table { table-layout: fixed; }
+td.n { font-variant-numeric: tabular-nums; }
+td.ref { font-size: .82rem; }
 .ref { color: var(--muted); font-size: .85em; }
 .sources { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 14px; }
 .sources h3 { margin-top: 0; font-size: .9rem; color: var(--muted); }
@@ -66,10 +69,10 @@ section[hidden] { display: none; }
   <p>For everything else, the standard non-surgical option is an accelerated course of radiation with carboplatin, which gives a median of about five to six months. Chemotherapy alone does little. Comfort care (pain control, an anti-inflammatory, a feeding tube, the pill toceranib) buys weeks to months and keeps the cat eating. <span class="ref">[3, 5, 9]</span></p>
   <p>Experimentally, a STAT3-blocking drug produced the first measurable benefit of a targeted drug in this cancer, and several trials are listed as open. <span class="ref">[17]</span></p>
 
-  <h3>Treatment options by situation</h3>
+  <h3 style="border-top:1px solid var(--line);padding-top:24px">Treatment options by situation</h3>
   <p>The options are grouped by the kind of cat each study enrolled, because that shapes the results more than the treatment does. Median survival is the point by which half of the cats had died.</p>
 
-  <h3>A small tumor that a surgeon judges removable</h3>
+  <h4>A small tumor that a surgeon judges removable</h4>
   <p>This applies to a minority of cats, mostly those with a tumor at the front of the jaw.</p>
   <dl class="opts">
     <dt>Maxillectomy, removal of part of the upper jaw <span class="ref">[36]</span></dt>
@@ -80,7 +83,7 @@ section[hidden] { display: none; }
     <dd><b>About 14 months of tumor control</b>, the longest reported, in small series. An operation followed by 15 to 20 daily radiation sessions.</dd>
   </dl>
 
-  <h3>A tumor that cannot be removed, in a cat fit for repeated anesthesia</h3>
+  <h4>A tumor that cannot be removed, in a cat fit for repeated anesthesia</h4>
   <dl class="opts">
     <dt>Accelerated radiation, 4.8 Gy in each of 10 daily sessions <span class="ref">[4]</span></dt>
     <dd><b>Median 174 days; 29% alive at one year.</b> Twenty-one cats with tumors at any site; small (T1) tumors went 590 days before regrowing. Ten anesthesias over two weeks; mouth sores last two to four weeks and a feeding tube is usual.</dd>
@@ -94,7 +97,7 @@ section[hidden] { display: none; }
     <dd><b>Median 136 days.</b> Nine cats whose tumors had invaded bone. Four weekly anesthesias and two intravenous infusions; all side effects were mild.</dd>
   </dl>
 
-  <h3>Comfort first, with little or no anesthesia</h3>
+  <h4>Comfort first, with little or no anesthesia</h4>
   <dl class="opts">
     <dt>Toceranib tablets, usually with meloxicam <span class="ref">[9]</span></dt>
     <dd><b>Median 123 days, compared with 45 days without it; 20% alive at one year.</b> Forty-six cats, most not candidates for radiation. A tablet at home three days a week with periodic blood tests; mild stomach upset is the usual side effect.</dd>
@@ -113,7 +116,8 @@ section[hidden] { display: none; }
   <h2>Radiation</h2>
   <p>Radiation aims high-energy beams at the tumor over several sessions, each under brief anesthesia. Protocols differ in the dose per session (measured in gray, Gy) and in the number of sessions. Courses that pack many sessions into one or two weeks, called accelerated courses, do better than once-a-week palliative courses.</p>
   <div class="tbl"><table>
-    <thead><tr><th>Protocol</th><th>Cats</th><th>Median survival</th><th>Findings</th><th></th></tr></thead>
+    <colgroup><col style="width:24%"><col style="width:8%"><col style="width:18%"><col style="width:44%"><col style="width:6%"></colgroup>
+    <thead><tr><th>Protocol</th><th>Cats</th><th>Median survival</th><th>Findings</th><th>Ref.</th></tr></thead>
     <tbody>
       <tr><td>Weekly palliative radiation, 8 Gy in each of 3 sessions</td><td class="n">7</td><td class="n">60 days</td><td>Three of the seven cats did not finish the course, and the authors saw no real palliation.</td><td class="ref">7</td></tr>
       <tr><td>Weekly palliative radiation, 24 to 40 Gy in 3 or 4 sessions</td><td class="n">54</td><td class="n">113 days with radiation alone; 80 days when chemotherapy was added</td><td>65% of owners reported a better quality of life. Tumors under the tongue gave 135 days and tumors of the lower jaw 80 days.</td><td class="ref">8</td></tr>
@@ -139,7 +143,8 @@ section[hidden] { display: none; }
   <h2>Chemotherapy</h2>
   <p>Given alone, no chemotherapy drug has worked well for this tumor. Carboplatin given alongside radiation is the one combination with decent data.</p>
   <div class="tbl"><table>
-    <thead><tr><th>Drug</th><th>Result</th><th></th></tr></thead>
+    <colgroup><col style="width:30%"><col style="width:62%"><col style="width:8%"></colgroup>
+    <thead><tr><th>Drug</th><th>Result</th><th>Ref.</th></tr></thead>
     <tbody>
       <tr><td>Carboplatin with accelerated radiation</td><td>Median survival was 163 days, about double the 86 days seen with the same radiation alone. Given by itself, carboplatin produced one partial response in a dose-finding trial.</td><td class="ref">5, 12, 13</td></tr>
       <tr><td>Gemcitabine with palliative radiation</td><td>In eight cats, 75% responded, but the responses lasted a median of six weeks and median survival was 111 days.</td><td class="ref">10</td></tr>
