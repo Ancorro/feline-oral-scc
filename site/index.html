@@ -2,11 +2,11 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: one reading column, evidence tables per treatment, survival-in-days bars as the recurring visual */
+/* Layout: sticky section nav, evidence tables per treatment, survival-in-days bars (0–365 d scale) as the recurring visual, numbered sources */
 :root {
   --bg: #f6f7f5; --surface: #ffffff; --fg: #1d2421; --muted: #5b6661; --line: #d9dfdb;
   --accent: #2f6f62; --accent-soft: #e2efeb; --warn: #9a5b12; --warn-soft: #f6ead9;
-  --bar: #2f6f62; --bar-track: #e6ebe8;
+  --bar: #2f6f62; --bar-track: #e6ebe8; --bar-ref: #b8c4bf;
   --display: "Source Serif 4", Georgia, serif;
   --body: "IBM Plex Sans", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
@@ -14,191 +14,366 @@
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #121715; --surface: #1a201e; --fg: #e3e9e6; --muted: #9aa7a1; --line: #2c3532;
   --accent: #7cc4b2; --accent-soft: #1e302b; --warn: #e2b071; --warn-soft: #33281a;
-  --bar: #7cc4b2; --bar-track: #26302c; color-scheme: dark } }
+  --bar: #7cc4b2; --bar-track: #26302c; --bar-ref: #4a5a54; color-scheme: dark } }
 :root[data-theme="dark"] {
   --bg: #121715; --surface: #1a201e; --fg: #e3e9e6; --muted: #9aa7a1; --line: #2c3532;
   --accent: #7cc4b2; --accent-soft: #1e302b; --warn: #e2b071; --warn-soft: #33281a;
-  --bar: #7cc4b2; --bar-track: #26302c; color-scheme: dark }
+  --bar: #7cc4b2; --bar-track: #26302c; --bar-ref: #4a5a54; color-scheme: dark }
 body { background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
-.wrap { max-width: 860px; margin: 0 auto; padding-block: 40px 64px;
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 920px; margin: 0 auto; padding-block: 36px 64px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: grid; gap: 40px; }
+  display: grid; gap: 44px; }
 h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; line-height: 1.2; }
-h1 { font-size: 2.2rem; }
-h2 { font-size: 1.5rem; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
-h3 { font-size: 1.1rem; }
-p { margin: 0; max-width: 68ch; }
-section { display: grid; gap: 14px; min-width: 0; }
+h1 { font-size: 2.3rem; }
+h2 { font-size: 1.55rem; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.1rem; margin-top: 6px; }
+p { margin: 0; max-width: 70ch; }
+section { display: grid; gap: 14px; min-width: 0; scroll-margin-top: 70px; }
 .eyebrow { font: 500 .75rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
 .lede { font-size: 1.05rem; color: var(--muted); }
-.note { background: var(--warn-soft); color: var(--fg); border-left: 3px solid var(--warn); padding: 12px 14px; border-radius: 4px; max-width: none; }
-.key { background: var(--accent-soft); padding: 14px 16px; border-radius: 6px; display: grid; gap: 8px; }
-.key ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
-ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; max-width: 72ch; }
+.note { background: var(--warn-soft); border-left: 3px solid var(--warn); padding: 12px 14px; border-radius: 4px; max-width: none; }
+nav.toc { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
+  margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))) 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding: 8px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px)); overflow-x: auto; }
+nav.toc ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; white-space: nowrap; }
+nav.toc a { font: 500 .78rem/1 var(--mono); color: var(--muted); text-decoration: none; padding: 7px 10px; border-radius: 99px; border: 1px solid transparent; display: inline-block; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); border-color: var(--line); outline: none; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; display: grid; gap: 2px; }
+.stat b { font: 600 1.55rem/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: .8rem; color: var(--muted); }
+.stat small { font: 400 .7rem/1 var(--mono); color: var(--accent); }
+.key { background: var(--accent-soft); padding: 14px 16px; border-radius: 6px; }
+.key ul, ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; max-width: 74ch; }
 .tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
-table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: .9rem; }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: .88rem; }
 th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { font: 600 .72rem/1.3 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+th { font: 600 .7rem/1.3 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); background: var(--bg); }
 tr:last-child td { border-bottom: 0; }
 td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.bar { display: grid; grid-template-columns: 1fr; gap: 3px; min-width: 120px; }
-.bar i { display: block; height: 6px; background: var(--bar-track); border-radius: 3px; position: relative; }
+.bar { min-width: 130px; }
+.bar i { display: block; height: 7px; background: var(--bar-track); border-radius: 3px; position: relative; }
 .bar i b { position: absolute; inset: 0 auto 0 0; background: var(--bar); border-radius: 3px; }
-.risk { font: 500 .72rem/1 var(--mono); padding: 3px 7px; border-radius: 99px; white-space: nowrap; }
-.risk.lo { background: var(--accent-soft); color: var(--accent); }
-.risk.md { background: var(--warn-soft); color: var(--warn); }
+.bar i.ref b { background: var(--bar-ref); }
+.bar em { display: block; font: 400 .68rem/1.4 var(--mono); color: var(--muted); font-style: normal; margin-top: 3px; }
+.pill { font: 500 .7rem/1 var(--mono); padding: 3px 7px; border-radius: 99px; white-space: nowrap; }
+.pill.lo { background: var(--accent-soft); color: var(--accent); }
+.pill.md { background: var(--warn-soft); color: var(--warn); }
+.pill.gr { background: var(--bar-track); color: var(--muted); }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.card h3 { margin: 0; font-size: 1.05rem; }
+.card dl { margin: 0; display: grid; grid-template-columns: 7.5em 1fr; gap: 4px 10px; font-size: .86rem; }
+.card dt { font: 500 .68rem/1.6 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.card dd { margin: 0; min-width: 0; }
+.card .tag { display: flex; gap: 6px; flex-wrap: wrap; }
 a { color: var(--accent); }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+sup a { text-decoration: none; font: 500 .7em var(--mono); }
 .src { font-size: .85rem; color: var(--muted); }
-ol.refs { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; font-size: .88rem; }
+ol.refs { margin: 0; padding-left: 1.6em; display: grid; gap: 7px; font-size: .86rem; }
+ol.refs li { scroll-margin-top: 70px; }
 footer { font-size: .82rem; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 </style>
 
 <div class="wrap">
 <header style="display:grid;gap:10px">
   <span class="eyebrow">Research notes · updated 2026-10-21</span>
   <h1>Feline Oral Squamous Cell Carcinoma (SCC)</h1>
-  <p class="lede">Oral squamous cell carcinoma (SCC) is a cancer of the lining of the mouth. It makes up 70–80% of cat oral tumors. This page collects the published survival numbers for radiation, chemotherapy, surgery and low-risk comfort care, plus open trials.</p>
-  <p class="note">Notes from published studies, not veterinary advice. Most studies are small and look back at past cases. Each cat's tumor site, size and health change the picture, so take these to a veterinary oncologist.</p>
+  <p class="lede">Oral squamous cell carcinoma (SCC) is a cancer of the lining of the mouth and the most common oral tumor in cats (70–80%). This page collects published survival numbers for every treatment, explains each active clinical trial and experimental therapy, and links every figure to its study.</p>
+  <p class="note">Notes from published studies, not veterinary advice. Most studies are small and look back at past cases. Tumor site, size and the cat's health change the picture; take this to a veterinary oncologist.</p>
 </header>
 
-<section>
-  <h2>The short version</h2>
-  <div class="key">
-    <ul>
-      <li><strong>Untreated:</strong> median survival (MST, the time by which half the cats have died) is about 30–60 days. Fewer than 10% of cats live a year. [1][2]</li>
-      <li><strong>Best results:</strong> small tumors that can be fully removed (front of the lower jaw) or that respond completely to radiation. Some of these cats live 1–2+ years. [2][4][6]</li>
-      <li><strong>Radiation:</strong> the strongest non-surgical option. Accelerated courses give a median of ~5–6 months and 29% alive at one year. [4][5]</li>
-      <li><strong>Chemotherapy alone:</strong> does little. Carboplatin helps mainly as a booster given with radiation. [1][5][10]</li>
-      <li><strong>Low-risk options:</strong> pain control, meloxicam, a feeding tube, toceranib (an oral pill) and bisphosphonates. They mainly buy comfort and some time. [1][2][9]</li>
-    </ul>
+<nav class="toc" aria-label="Sections"><ul>
+  <li><a href="#glance">At a glance</a></li>
+  <li><a href="#compare">All treatments</a></li>
+  <li><a href="#radiation">Radiation</a></li>
+  <li><a href="#chemo">Chemo</a></li>
+  <li><a href="#lowrisk">Low-risk</a></li>
+  <li><a href="#surgery">Surgery</a></li>
+  <li><a href="#trials">Active trials</a></li>
+  <li><a href="#experimental">Experimental</a></li>
+  <li><a href="#recent">Recent data</a></li>
+  <li><a href="#sources">Sources</a></li>
+</ul></nav>
+
+<section id="glance">
+  <h2>At a glance</h2>
+  <div class="stats">
+    <div class="stat"><b>30–60 d</b><span>median survival, no treatment</span><small>[1][2]</small></div>
+    <div class="stat"><b>&lt;10%</b><span>alive at 1 year, all comers</span><small>[1][2]</small></div>
+    <div class="stat"><b>164 d</b><span>median, accelerated radiation + carboplatin</span><small>[3][5]</small></div>
+    <div class="stat"><b>29%</b><span>alive at 1 year, 4.8 Gy × 10 radiation</span><small>[4]</small></div>
+    <div class="stat"><b>590 d</b><span>before regrowth, small (T1) tumors irradiated</span><small>[4]</small></div>
+    <div class="stat"><b>911 d</b><span>median, front-of-jaw tumors removed surgically</span><small>[6]</small></div>
+    <div class="stat"><b>123 vs 45 d</b><span>toceranib pill vs none</span><small>[9]</small></div>
+    <div class="stat"><b>5 trials</b><span>listed as enrolling, status unconfirmed</span><small>[14][15][22][24][26]</small></div>
   </div>
+  <div class="key"><ul>
+    <li><strong>What works best:</strong> full surgical removal of a small front-of-jaw tumor, or radiation that shrinks the tumor completely. Those cats can live 1–2+ years.</li>
+    <li><strong>Standard non-surgical option:</strong> accelerated radiation (many sessions in 1–2 weeks) with carboplatin, median about 5–6 months.</li>
+    <li><strong>Chemotherapy (chemo) alone:</strong> little benefit from any drug.</li>
+    <li><strong>Low-risk options:</strong> pain control, meloxicam, a feeding tube, toceranib and bisphosphonates. They buy comfort and some weeks to months.</li>
+    <li><strong>Experimental:</strong> a STAT3-blocking drug showed the first measurable benefit of a targeted drug (35% disease control, 20 cats). Five trials are listed as open.</li>
+  </ul></div>
 </section>
 
-<section>
-  <h2>Recent data, 2025–2026</h2>
-  <p>New since 2025. No new treatment has changed the standard outlook yet. The first targeted-drug trial in cats showed some activity, and genetic work points at different targets than the ones tried so far.</p>
+<section id="compare">
+  <h2>All treatments compared</h2>
+  <p>Median survival time (MST) is the point by which half the cats in a study had died. Bars run 0–365 days; the grey bar is the untreated reference. Different studies enrolled different cats, so compare loosely.</p>
   <div class="tbl"><table>
-    <thead><tr><th>Date</th><th>Study</th><th>What it found</th><th>What it means for treatment</th></tr></thead>
+    <thead><tr><th>Treatment</th><th>Cats</th><th>MST</th><th style="width:24%">0–365 days</th><th>1-year survival</th><th>Ref</th></tr></thead>
     <tbody>
-      <tr><td class="num">Apr 2025</td><td>Radiation + carboplatin ± toceranib, 47 cats [3]</td><td>MST 164 d overall. Toceranib afterwards: 208 vs 162 d, not significant. Tongue tumors: longer time before regrowth with toceranib (142 vs 104 d)</td><td>Toceranib after radiation helps most cats little; possibly worth it for tongue tumors</td></tr>
-      <tr><td class="num">2025</td><td>STAT3 decoy (CS3D), phase 1, 20 cats; Cancer Cell [16][17]</td><td>Six IV doses over a month. 35% disease control (5 stable, 2 shrank). Only mild anemia. Responders showed immune changes and PD-1 in tumors</td><td>First targeted drug with measurable benefit in this cancer. Phase 2 planned with a biotech partner; no enrollment found yet</td></tr>
-      <tr><td class="num">Jul 2025</td><td>Electrochemotherapy for skin SCC, 23 cats [18]</td><td>78% responded; early-stage tumors did best</td><td>Skin tumors, not mouth; supports trying it on surface oral tumors</td></tr>
-      <tr><td class="num">Oct 2025</td><td>Review of the field, Front Vet Sci [2]</td><td>Collected survival numbers; flags EGFR, immunotherapy and metabolic drugs as directions</td><td>Background reference for this page</td></tr>
-      <tr><td class="num">Jan 2026</td><td>4,300 biopsy cases, Germany [19]</td><td>41% of cat SCC was in the mouth, 36% skin</td><td>Epidemiology only</td></tr>
-      <tr><td class="num">Feb 2026</td><td>Tumor DNA sequencing, 36 tumors; Vet Comp Oncol [20]</td><td>TP53 mutated in 71%. Frequent PTEN loss (44%), MYC gain (41%), CDKN2A loss (41%). EGFR gain only 6%. Few mutations overall</td><td>Matches human head and neck cancer without HPV. EGFR drugs alone unlikely to work; PI3K/mTOR drugs with carboplatin or radiation suggested; checkpoint drugs still worth testing</td></tr>
-      <tr><td class="num">2026</td><td>Electrochemotherapy, tongue tumor, 1 cat [21]</td><td>Three sessions: tumor shrank, pain eased, cat ate again, gained 0.9 kg. Autopsy later found deep tumor spread</td><td>A palliative option for tongue tumors; does not stop deep spread</td></tr>
+      <tr><td>No treatment / NSAID only</td><td class="num">—</td><td class="num">30–60 d</td><td class="bar"><i class="ref"><b style="width:12%"></b></i></td><td class="num">&lt;10%</td><td class="num">[1][2]</td></tr>
+      <tr><td>Palliative radiation, 8 Gy × 3</td><td class="num">7</td><td class="num">60 d</td><td class="bar"><i><b style="width:16%"></b></i></td><td class="num">—</td><td class="num">[7]</td></tr>
+      <tr><td>Palliative radiation, 24–40 Gy weekly, alone</td><td class="num">12</td><td class="num">113 d</td><td class="bar"><i><b style="width:31%"></b></i></td><td class="num">—</td><td class="num">[8]</td></tr>
+      <tr><td>Palliative radiation + chemo</td><td class="num">37</td><td class="num">80 d</td><td class="bar"><i><b style="width:22%"></b></i></td><td class="num">—</td><td class="num">[8]</td></tr>
+      <tr><td>Stereotactic radiation</td><td class="num">20</td><td class="num">106 d</td><td class="bar"><i><b style="width:29%"></b></i></td><td class="num">—</td><td class="num">[11]</td></tr>
+      <tr><td>Palliative radiation + gemcitabine</td><td class="num">8</td><td class="num">111.5 d</td><td class="bar"><i><b style="width:31%"></b></i></td><td class="num">—</td><td class="num">[10]</td></tr>
+      <tr><td>Toceranib (oral pill) ± NSAID</td><td class="num">46</td><td class="num">123 d</td><td class="bar"><i><b style="width:34%"></b></i></td><td class="num">20%</td><td class="num">[9]</td></tr>
+      <tr><td>Weekly radiation + zoledronate (bone-invasive tumors)</td><td class="num">9</td><td class="num">136 d</td><td class="bar"><i><b style="width:37%"></b></i></td><td class="num">—</td><td class="num">[25]</td></tr>
+      <tr><td>Accelerated radiation alone, 3.5 Gy × 14</td><td class="num">9</td><td class="num">86 d</td><td class="bar"><i><b style="width:24%"></b></i><em>complete responders 298 d</em></td><td class="num">—</td><td class="num">[12]</td></tr>
+      <tr><td>Accelerated radiation + carboplatin (2011)</td><td class="num">31</td><td class="num">163 d</td><td class="bar"><i><b style="width:45%"></b></i><em>complete responders 379 d</em></td><td class="num">~15%</td><td class="num">[5]</td></tr>
+      <tr><td>Accelerated radiation + carboplatin (2025)</td><td class="num">47</td><td class="num">164 d</td><td class="bar"><i><b style="width:45%"></b></i></td><td class="num">—</td><td class="num">[3]</td></tr>
+      <tr><td>Accelerated radiation, 4.8 Gy × 10</td><td class="num">21</td><td class="num">174 d</td><td class="bar"><i><b style="width:48%"></b></i><em>T1 tumors: 590 d to regrowth</em></td><td class="num">29%</td><td class="num">[4]</td></tr>
+      <tr><td>Mandibulectomy (part of lower jaw removed)</td><td class="num">21 SCC</td><td class="num">217 d</td><td class="bar"><i><b style="width:59%"></b></i><em>front-of-jaw: 911 d</em></td><td class="num">43%</td><td class="num">[6]</td></tr>
+      <tr><td>Radical mandibulectomy (75–90% of jaw)</td><td class="num">8</td><td class="num">mean 712 d</td><td class="bar"><i><b style="width:100%"></b></i></td><td class="num">—</td><td class="num">[2]</td></tr>
+      <tr><td>Maxillectomy (upper jaw), mixed tumor types</td><td class="num">60</td><td class="num">not reached</td><td class="bar"><i><b style="width:100%"></b></i></td><td class="num">83% at 2 y</td><td class="num">[2]</td></tr>
     </tbody>
   </table></div>
-  <h3>Trials listed as enrolling (status not confirmed)</h3>
-  <ul class="plain">
-    <li><strong>Colorado State University, "Novel Immunotherapy for Cats with Oral SCC".</strong> Listed as currently enrolling; details not posted online. Clinical trials service: (970) 297-4001. Treatment in Fort Collins. [22]</li>
-    <li><strong>University of Florida RNA nanoparticle vaccine</strong> and <strong>University of Illinois injected exatecan nanoparticles</strong>: see the trials section below. [14][15]</li>
-    <li>Older registry listings, status unknown: University of Missouri lattice radiation (2023) and North Carolina State "new approach for oral cancer in cats" (2024). Search the <a href="https://www.avma.org/resources-tools/animal-health-and-welfare/veterinary-clinical-trials-registry">AVMA Veterinary Clinical Trials Registry</a>. [23]</li>
-  </ul>
 </section>
 
-<section>
+<section id="radiation">
   <h2>Radiation therapy</h2>
-  <p>Radiation aims high-energy beams at the tumor over several sessions, each under brief anesthesia. Protocols differ in dose per session (Gy, the unit of absorbed dose) and how many sessions. Courses that use many sessions in a short time do better than once-a-week palliative courses.</p>
+  <p>Radiation aims high-energy beams at the tumor over several sessions, each under brief anesthesia. Protocols differ in dose per session (Gy, the unit of absorbed dose) and number of sessions. Courses that pack many sessions into 1–2 weeks ("accelerated") outperform once-a-week palliative courses.</p>
   <div class="tbl"><table>
-    <thead><tr><th>Protocol</th><th>Cats</th><th>Median survival</th><th style="width:22%">Scale (0–365 days)</th><th>Notes</th></tr></thead>
+    <thead><tr><th>Protocol</th><th>Cats</th><th>Response</th><th>Median survival</th><th>Notes</th><th>Ref</th></tr></thead>
     <tbody>
-      <tr><td>Weekly palliative, 8 Gy × 3 [7]</td><td class="num">7</td><td class="num">60 d</td><td><div class="bar"><i><b style="width:16%"></b></i></div></td><td>3 of 7 did not finish; authors saw no real palliation</td></tr>
-      <tr><td>Weekly palliative, 24–40 Gy in 3–4 sessions [8]</td><td class="num">54</td><td class="num">113 d (RT alone)<br>80 d (+chemo)</td><td><div class="bar"><i><b style="width:31%"></b></i></div></td><td>65% of owners reported better quality of life; under-tongue tumors 135 d vs lower jaw 80 d</td></tr>
-      <tr><td>Stereotactic RT (few high-precision doses) [11]</td><td class="num">20</td><td class="num">106 d</td><td><div class="bar"><i><b style="width:29%"></b></i></div></td><td>38.5% responded; jaw fractures seen; authors call it palliative</td></tr>
-      <tr><td>Accelerated, 3.5 Gy × 14 twice daily over 9 days [12]</td><td class="num">9</td><td class="num">86 d</td><td><div class="bar"><i><b style="width:24%"></b></i></div></td><td>Complete responders: 298 d</td></tr>
-      <tr><td>Accelerated twice-daily + carboplatin [5]</td><td class="num">31</td><td class="num">163 d</td><td><div class="bar"><i><b style="width:45%"></b></i></div></td><td>52% complete response; those cats 379 d. Tonsil/cheek: mean 724 d</td></tr>
-      <tr><td>Accelerated + carboplatin, newer series [3]</td><td class="num">47</td><td class="num">164 d</td><td><div class="bar"><i><b style="width:45%"></b></i></div></td><td>Adding toceranib after: 208 vs 162 d, not significant</td></tr>
-      <tr><td>Accelerated hypofractionated, 4.8 Gy × 10 daily [4]</td><td class="num">21</td><td class="num">174 d</td><td><div class="bar"><i><b style="width:48%"></b></i></div></td><td>29% alive at 1 year; small (T1) tumors 590 d without progression</td></tr>
+      <tr><td>Weekly palliative, 8 Gy × 3</td><td class="num">7</td><td class="num">—</td><td class="num">60 d</td><td>3 of 7 did not finish; authors saw no real palliation</td><td class="num">[7]</td></tr>
+      <tr><td>Weekly palliative, 24–40 Gy in 3–4 sessions</td><td class="num">54</td><td class="num">—</td><td class="num">113 d RT alone<br>80 d with chemo</td><td>65% of owners reported better quality of life; under-tongue 135 d vs lower jaw 80 d</td><td class="num">[8]</td></tr>
+      <tr><td>Stereotactic RT (few high-precision doses)</td><td class="num">20</td><td class="num">38.5%</td><td class="num">106 d</td><td>Fast symptom relief; jaw fractures seen; females did better</td><td class="num">[11]</td></tr>
+      <tr><td>Accelerated, 3.5 Gy × 14 twice daily over 9 days</td><td class="num">9</td><td class="num">3 CR, 6 PR</td><td class="num">86 d</td><td>Complete responders 298 d, partial 60 d</td><td class="num">[12]</td></tr>
+      <tr><td>Accelerated twice-daily + carboplatin</td><td class="num">31</td><td class="num">52% CR</td><td class="num">163 d</td><td>CR at 30 days: 379 d vs 115 d. Tongue 175 d, upper jaw 160 d, lower jaw 130 d; tonsil/cheek mean 724 d. 78% needed a feeding tube</td><td class="num">[5]</td></tr>
+      <tr><td>Accelerated + carboplatin, 2011–2023 series</td><td class="num">47</td><td class="num">—</td><td class="num">164 d</td><td>121 d before regrowth; 17% metastasis; 9 jaw fractures; 31 of 42 deaths from the local tumor</td><td class="num">[3]</td></tr>
+      <tr><td>Accelerated hypofractionated, 4.8 Gy × 10 daily</td><td class="num">21</td><td class="num">7 CR, 5 PR of 17</td><td class="num">174 d</td><td>29% alive at 1 y; 41% locally controlled at 1 y; T1 tumors 590 d before regrowth; 19% metastasized</td><td class="num">[4]</td></tr>
     </tbody>
   </table></div>
-  <h3>What predicts a good radiation outcome</h3>
+  <p class="src">CR = complete response (tumor gone on exam/imaging), PR = partial response (shrank at least 30%).</p>
+  <h3>What predicts a good outcome</h3>
   <ul class="plain">
-    <li><strong>Small tumor:</strong> T1 tumors (under 2 cm) did far better in the 4.8 Gy × 10 study (590 d without progression). [4]</li>
-    <li><strong>Complete response by 30 days:</strong> 379 d vs 115 d for cats without one. [5]</li>
-    <li><strong>Site:</strong> tonsil and cheek best; tongue 175 d, upper jaw 160 d, lower jaw 130 d with radiation + carboplatin. [5]</li>
+    <li><strong>Small tumor (T1, under 2 cm):</strong> 590 d before regrowth vs 105 d overall. [4]</li>
+    <li><strong>Complete response by 30 days:</strong> 379 d vs 115 d. [5]</li>
+    <li><strong>Site:</strong> tonsil and cheek best; tongue and upper jaw middle; lower jaw worst. [5][8]</li>
   </ul>
   <h3>Side effects</h3>
-  <p>Mouth inflammation (mucositis) is nearly universal and painful for a few weeks. Many clinics place a feeding tube ahead of time. Late effects include white fur, scarring, and in a minority, bone death and jaw fractures (9 of 47 cats in one series). [3][4]</p>
+  <p>Mouth inflammation (mucositis) is nearly universal and painful for 2–4 weeks; most clinics place a feeding tube first. Late effects: white fur, skin scarring, and in a minority, bone death and jaw fractures (9 of 47 cats in one series). [3][4]</p>
 </section>
 
-<section>
+<section id="chemo">
   <h2>Chemotherapy</h2>
   <p>Given alone, no chemotherapy drug has worked well for this tumor. Carboplatin given with radiation is the one combination with decent data.</p>
   <div class="tbl"><table>
-    <thead><tr><th>Drug</th><th>Use</th><th>Result</th></tr></thead>
+    <thead><tr><th>Drug</th><th>How used</th><th>Result</th><th>Ref</th></tr></thead>
     <tbody>
-      <tr><td>Carboplatin</td><td>With accelerated radiation [5]</td><td>MST 163 d, about double the same radiation alone (86 d) [12]. Alone: 1 partial response among oral SCC cats in a dose-finding trial [13]</td></tr>
-      <tr><td>Gemcitabine</td><td>Low dose with palliative radiation, 8 cats [10]</td><td>75% response but lasting a median 42.5 d; MST 111.5 d</td></tr>
-      <tr><td>Mitoxantrone, doxorubicin, bleomycin</td><td>Alone or with radiation [1]</td><td>Minimal to no benefit; responses short</td></tr>
-      <tr><td>Toceranib (Palladia, an oral targeted pill)</td><td>Alone or with an NSAID [9]</td><td>MST 123 d vs 45 d without it; 56.5% had some response; better with an NSAID</td></tr>
-      <tr><td>Bleomycin + electrical pulses (electrochemotherapy)</td><td>Tumor-directed [2]</td><td>Strong results on surface skin SCC; only case reports in the mouth so far</td></tr>
+      <tr><td>Carboplatin</td><td>With accelerated radiation</td><td>MST 163 d, about double the same radiation alone (86 d). Alone: 1 partial response among oral SCC cats in a dose-finding trial</td><td class="num">[5][12][13]</td></tr>
+      <tr><td>Gemcitabine</td><td>Low dose with palliative radiation, 8 cats</td><td>75% responded but for a median of 42.5 d; MST 111.5 d</td><td class="num">[10]</td></tr>
+      <tr><td>Mitoxantrone, doxorubicin, bleomycin, cisplatin</td><td>Alone or with radiation</td><td>Minimal to no benefit; responses short</td><td class="num">[1][10]</td></tr>
+      <tr><td>Toceranib (Palladia, oral targeted pill)</td><td>Alone or with an NSAID, 46 cats</td><td>MST 123 d vs 45 d without; 56.5% had some response; every 1-year survivor had toceranib plus an NSAID</td><td class="num">[9]</td></tr>
+      <tr><td>Toceranib after radiation + carboplatin</td><td>15 vs 27 cats</td><td>208 vs 162 d, not significant. Tongue tumors: 142 vs 104 d before regrowth (significant)</td><td class="num">[3]</td></tr>
+      <tr><td>Bleomycin + electrical pulses (electrochemotherapy)</td><td>Tumor-directed</td><td>78% response on skin SCC; one tongue case report in the mouth</td><td class="num">[18][21]</td></tr>
     </tbody>
   </table></div>
 </section>
 
-<section>
+<section id="lowrisk">
   <h2>Low-risk and comfort-focused care</h2>
   <p>These need little or no anesthesia and can run alongside other treatment or on their own. They mostly improve comfort; a few modestly extend survival.</p>
   <div class="tbl"><table>
-    <thead><tr><th>Option</th><th>Risk</th><th>What it does</th><th>Evidence</th></tr></thead>
+    <thead><tr><th>Option</th><th>Risk</th><th>What it does</th><th>Evidence</th><th>Ref</th></tr></thead>
     <tbody>
-      <tr><td>Pain control (vet-prescribed)</td><td><span class="risk lo">low</span></td><td>Oral tumors hurt; eating and grooming improve when pain is managed</td><td>Standard palliative care [1]</td></tr>
-      <tr><td>Meloxicam (an NSAID, anti-inflammatory)</td><td><span class="risk lo">low</span></td><td>Pain relief, possible mild anti-tumor effect; preferred over piroxicam in cats</td><td>NSAID use linked to longer survival in one study; watch kidneys [1]</td></tr>
-      <tr><td>Esophagostomy feeding tube</td><td><span class="risk lo">low</span></td><td>Food, water and pills without chewing; one short anesthesia to place</td><td>Routine with radiation and after jaw surgery [1][3]</td></tr>
-      <tr><td>Toceranib ± meloxicam</td><td><span class="risk md">low–mod</span></td><td>Oral pill at home 3 days a week</td><td>MST 123 vs 45 d; 20% alive at 1 year; mild stomach and blood-count effects [9]</td></tr>
-      <tr><td>Zoledronate or pamidronate (bisphosphonates)</td><td><span class="risk lo">low</span></td><td>Slow tumor bone destruction, reduce bone pain</td><td>Disease stable in some cats; no shrinkage [2]</td></tr>
-      <tr><td>Palliative radiation (weekly)</td><td><span class="risk md">moderate</span></td><td>3–4 sessions to shrink the tumor and ease symptoms</td><td>About half of cats get relief; MST 2–4 months [1][8]</td></tr>
+      <tr><td>Pain control (vet-prescribed)</td><td><span class="pill lo">low</span></td><td>Oral tumors hurt; eating and grooming improve when pain is managed</td><td>Standard palliative care</td><td class="num">[1]</td></tr>
+      <tr><td>Meloxicam (NSAID, anti-inflammatory)</td><td><span class="pill lo">low</span></td><td>Pain relief, possible mild anti-tumor effect; preferred over piroxicam in cats</td><td>NSAID use linked to longer survival (P = 0.004); watch kidneys</td><td class="num">[1][9]</td></tr>
+      <tr><td>Esophagostomy feeding tube</td><td><span class="pill lo">low</span></td><td>Food, water and pills without chewing; one short anesthesia to place</td><td>Routine with radiation and after jaw surgery</td><td class="num">[1][3]</td></tr>
+      <tr><td>Toceranib ± meloxicam</td><td><span class="pill md">low–mod</span></td><td>Oral pill at home 3 days a week</td><td>MST 123 vs 45 d; 20% alive at 1 y; mild stomach and blood-count effects</td><td class="num">[9]</td></tr>
+      <tr><td>Zoledronate or pamidronate (bisphosphonates)</td><td><span class="pill lo">low</span></td><td>Slow tumor bone destruction, reduce bone pain</td><td>Stable disease in some cats; with weekly radiation, 44% partial response, MST 136 d</td><td class="num">[2][25]</td></tr>
+      <tr><td>Palliative radiation (weekly)</td><td><span class="pill md">moderate</span></td><td>3–4 sessions to shrink the tumor and ease symptoms</td><td>About half of cats get relief; MST 2–4 months</td><td class="num">[1][8]</td></tr>
     </tbody>
   </table></div>
-  <p class="src">Without treatment cats usually stop eating within 1–2 months. With pain medicine and supportive care alone, comfortable time is typically 2–3 months.</p>
+  <p class="src">Without treatment cats usually stop eating within 1–2 months. With pain medicine and supportive care alone, comfortable time is typically 2–3 months. [1]</p>
 </section>
 
-<section>
+<section id="surgery">
   <h2>Surgery</h2>
-  <p>Surgery offers the longest survival when the tumor can be removed with clean margins, mainly at the front of the lower jaw. Removing part of the jaw (mandibulectomy) gave an MST of 217 d overall and 911 d for front-of-jaw tumors, with 38% recurrence. Most cats have trouble eating afterwards for a while; 41% needed a feeding tube. Tongue, throat and back-of-mouth tumors are rarely removable. [1][6]</p>
+  <p>Surgery offers the longest survival when the tumor can be removed with clean margins, mainly at the front of the lower jaw. Tongue, throat and back-of-mouth tumors are rarely removable.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Procedure</th><th>Cats</th><th>Outcome</th><th>Morbidity</th><th>Ref</th></tr></thead>
+    <tbody>
+      <tr><td>Mandibulectomy, 42 cats (21 with SCC)</td><td class="num">21</td><td>SCC MST 217 d; 1- and 2-year survival 43%; front-of-jaw 911 d; 38% recurrence</td><td>72% had trouble eating at first, 12% never ate on their own again, 41% needed a feeding tube; 83% of owners satisfied</td><td class="num">[6]</td></tr>
+      <tr><td>Radical mandibulectomy (75–90% of jaw)</td><td class="num">8</td><td>Mean 712 d; 3 recurrences</td><td>6 of 8 ate on their own</td><td class="num">[2]</td></tr>
+      <tr><td>Maxillectomy, mixed tumor types</td><td class="num">60</td><td>83% alive at 2 years</td><td>Median 7 days of poor appetite; 20% wound breakdown</td><td class="num">[2]</td></tr>
+    </tbody>
+  </table></div>
 </section>
 
-<section>
-  <h2>Clinical trials and new treatments</h2>
-  <ul class="plain">
-    <li><strong>University of Florida, RNA nanoparticle vaccine.</strong> Any cat with oral SCC and no other major illness; standard treatment allowed alongside. Study pays for 3 IV vaccine visits over 7 weeks and rechecks. PI (principal investigator): Dr. Carlos Souza. <a href="https://research.vetmed.ufl.edu/feline-rna-nanoparticle-vaccine-against-oral-squamous-cell-carcinoma/">Trial page</a>. [14]</li>
-    <li><strong>University of Illinois, injected nanoparticle chemotherapy (exatecan).</strong> Cats over 1 year with soft-tissue oral SCC (under the tongue, lip or gum preferred), no prior chemo, radiation or immunotherapy. Up to 4 injections; study covers feeding tube, MRI and biopsies. Contact: Rebecca Kamerer, (217) 300-6453. <a href="https://vetmed.illinois.edu/wp-content/uploads/2025/11/canine-and-feline-squamous-cell-carcinoma-.pdf">Flyer (Nov 2025)</a>. [15]</li>
-    <li><strong>STAT3 decoy (UCSF/UC Davis), phase 1, 20 cats.</strong> Little toxicity; disease stopped growing in 5 cats and shrank in 2. Further cat trials planned; no open enrollment found. <a href="https://www.the-scientist.com/first-of-its-kind-drug-shrunk-oral-tumors-in-pet-cats-73330">Coverage</a>. [16]</li>
-    <li><strong>Lab-stage:</strong> EGFR (epidermal growth factor receptor) blockers such as cetuximab, checkpoint immunotherapy, photodynamic therapy. Not yet available to cats. [2]</li>
-  </ul>
-  <p class="src">Enrollment status not confirmed by phone; call before planning around a trial.</p>
+<section id="trials">
+  <h2>Active clinical trials, explained</h2>
+  <p>Listed as enrolling on institution or registry pages as of October 2026. None confirmed by phone; call before planning around one. Each card says what the treatment is, why researchers think it might work, and what the trial costs the owner.</p>
+  <div class="cards">
+    <div class="card">
+      <h3>Personalized RNA vaccine · University of Florida</h3>
+      <div class="tag"><span class="pill lo">standard care allowed</span><span class="pill gr">Gainesville, FL</span></div>
+      <p><strong>What it is:</strong> messenger RNA (mRNA) copied from the cat's own tumor, wrapped in layered lipid nanoparticles, infused into a vein. The particles teach the immune system what the tumor looks like so it attacks it. Same platform that produced strong immune responses against brain tumors in 10 dogs and 4 people.</p>
+      <dl>
+        <dt>Protocol</dt><dd>3 IV infusions (30 min) over 7 weeks; rechecks at 2 weeks, 1 and 3 months</dd>
+        <dt>Eligible</dt><dd>Any cat with oral SCC and no other major illness. Surgery, radiation or chemo may run alongside</dd>
+        <dt>Cost</dt><dd>Study pays vaccine visits, bloodwork, immune monitoring, rechecks. Owner pays diagnostics and standard treatment</dd>
+        <dt>Data so far</dt><dd>None published in cats. "Limited enrollment" on UF's list</dd>
+        <dt>Contact</dt><dd>Inquiry form on the trial page; PI Dr. Carlos Souza</dd>
+      </dl>
+      <p class="src">Refs [14][27]</p>
+    </div>
+    <div class="card">
+      <h3>Injected nanoparticle chemo · University of Illinois</h3>
+      <div class="tag"><span class="pill md">no prior chemo/RT</span><span class="pill gr">Urbana, IL</span></div>
+      <p><strong>What it is:</strong> exatecan (a potent chemo drug) packed in sticky nanoparticles injected straight into the tumor. The particles cling to tumor tissue so the drug stays local instead of circulating, aiming for tumor kill without body-wide side effects.</p>
+      <dl>
+        <dt>Protocol</dt><dd>Injection under anesthesia every 3 weeks, up to 4; MRI and biopsies at set points; 84-day study</dd>
+        <dt>Eligible</dt><dd>Cats over 1 year, mostly soft-tissue oral SCC (under tongue, lip, gum preferred), confirmed by biopsy or cytology, otherwise healthy. No prior chemo, radiation or immunotherapy</dd>
+        <dt>Cost</dt><dd>Study pays feeding tube, injections, MRI, biopsies, recheck bloodwork; owner pays supportive meds</dd>
+        <dt>Data so far</dt><dd>None published in cats</dd>
+        <dt>Contact</dt><dd>Rebecca Kamerer, (217) 300-6453, rmoss81@illinois.edu</dd>
+      </dl>
+      <p class="src">Ref [15]</p>
+    </div>
+    <div class="card">
+      <h3>Radiation + camonsertib · NC State</h3>
+      <div class="tag"><span class="pill lo">free, ~$8,500 value</span><span class="pill gr">Raleigh, NC</span></div>
+      <p><strong>What it is:</strong> standard palliative radiation (3 sessions) for all cats; some also get camonsertib, a pill that blocks ATR, an enzyme tumors use to repair radiation-damaged DNA. Blocking repair should make the same radiation dose kill more tumor. In human trials with radiation, the main side effect is anemia.</p>
+      <dl>
+        <dt>Protocol</dt><dd>1 screening visit, 3 radiation sessions, rechecks at 1 and 2 weeks then monthly</dd>
+        <dt>Eligible</dt><dd>Biopsy-confirmed oral SCC anywhere in the mouth, otherwise healthy, no prior chemo or radiation</dd>
+        <dt>Cost</dt><dd>All testing and treatment free</dd>
+        <dt>Data so far</dt><dd>None published in cats. Registry listing VCT24005841 (Sept 2024)</dd>
+        <dt>Contact</dt><dd>Dr. Effie Palyvou, epalyvo@ncsu.edu</dd>
+      </dl>
+      <p class="src">Refs [24][28][29]</p>
+    </div>
+    <div class="card">
+      <h3>Intratumoral immunotherapy · Colorado State</h3>
+      <div class="tag"><span class="pill gr">Fort Collins, CO</span></div>
+      <p><strong>What it is:</strong> an unnamed immunotherapy injected directly into the tumor under anesthesia, meant to wake the immune system up inside the tumor. Investigator Steve Dow's lab works on immune-activating injectables. Tumor biopsies before and during treatment track the immune response.</p>
+      <dl>
+        <dt>Protocol</dt><dd>4 injections, one every 3 weeks; CT scans before, at visit 3 and 3 weeks after the last; biopsies and blood draws; ends at day 84</dd>
+        <dt>Eligible</dt><dd>Not posted; most families live within ~150 miles</dd>
+        <dt>Cost</dt><dd>Owner pays diagnosis and any extra tests the oncologist recommends; trial coverage not posted</dd>
+        <dt>Data so far</dt><dd>None published</dd>
+        <dt>Contact</dt><dd>CSU clinical trials, (970) 297-4001</dd>
+      </dl>
+      <p class="src">Ref [22]</p>
+    </div>
+    <div class="card">
+      <h3>Lattice radiation · University of Missouri</h3>
+      <div class="tag"><span class="pill gr">Columbia, MO</span><span class="pill md">listed 2023, status unknown</span></div>
+      <p><strong>What it is:</strong> a form of stereotactic radiation that delivers very high dose to a grid of spots inside the tumor and lower dose between them, in only a few sessions. The idea is to kill tumor cores while sparing nearby tissue and triggering an immune response against the rest.</p>
+      <dl>
+        <dt>Eligible</dt><dd>Confirmed oral SCC up to 3.5 cm, FeLV/FIV negative, no distant spread, no other cancer, no surgery within 2 weeks</dd>
+        <dt>Data so far</dt><dd>None published. PI Charlie Maitz</dd>
+      </dl>
+      <p class="src">Ref [26]</p>
+    </div>
+    <div class="card">
+      <h3>Short radiation + olaparib + bexagliflozin · Morris Animal Foundation grant</h3>
+      <div class="tag"><span class="pill md">lab phase first</span></div>
+      <p><strong>What it is:</strong> a shortened radiation course plus two repurposed drugs: olaparib (a PARP inhibitor, blocks another DNA-repair enzyme) and bexagliflozin (a diabetes drug that starves cells of glucose). Both are meant to make radiation hit harder with fewer anesthesia episodes.</p>
+      <dl>
+        <dt>Plan</dt><dd>Cell-line testing first, then 18 pet cats, all also getting standard care</dd>
+        <dt>Data so far</dt><dd>None; institution not named on the funder page</dd>
+      </dl>
+      <p class="src">Ref [30]</p>
+    </div>
+  </div>
 </section>
 
-<section>
+<section id="experimental">
+  <h2>Experimental treatments and current data</h2>
+  <p>Treatments that have been tried in cats or cat tumor cells but are not available in regular practice. Ordered from most to least clinical evidence.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Treatment</th><th>How it works</th><th>Stage</th><th>Data in cats</th><th>Ref</th></tr></thead>
+    <tbody>
+      <tr><td>STAT3 decoy (CS3D)</td><td>A small loop of DNA that mimics the sequence the STAT3 protein binds, soaking it up. STAT3 drives tumor growth and suppresses immunity; it has resisted drugs for decades. Target sequence is identical in cats and humans</td><td>Phase 1 done (2025); phase 2 planned with a biotech partner</td><td>20 cats, 6 IV doses over ~1 month. 35% disease control: 5 stable, 2 shrank markedly. One cat lived almost a year. Only mild, dose-independent anemia. Responders showed immune changes and PD-1 in tumors</td><td class="num">[16][17]</td></tr>
+      <tr><td>IB-DNQ + weekly radiation</td><td>Drug activated by the enzyme NQO1, which is high in these tumors and rises further after radiation; the activated drug floods tumor cells with reactive oxygen</td><td>Prospective trial done (2018–2021); no follow-on trial found</td><td>18 cats, 8 Gy weekly × 4 plus IB-DNQ: 17% partial response, 78% stable, 94% biological response on CT; no blood or organ toxicity. Pilot: ~45% tumor shrinkage. Survival not reported</td><td class="num">[31][32]</td></tr>
+      <tr><td>Radiation + zoledronate</td><td>Bisphosphonate blocks the bone-eating cells the tumor recruits and may slow blood vessel growth; given with weekly radiation for bone-invasive tumors</td><td>Single-arm trial published 2022</td><td>9 cats: 22–44% partial response depending on measure, 78% stable, MST 136 d; all side effects grade 1; bone-turnover marker fell in every cat</td><td class="num">[25]</td></tr>
+      <tr><td>Electrochemotherapy (bleomycin + electric pulses)</td><td>Pulses open pores in tumor cells so bleomycin floods in; works on reachable surface tumors</td><td>Routine for skin SCC in Europe; case reports in the mouth</td><td>Skin SCC: 78% response, 23 cats (2025). Tongue SCC: 1 cat, 3 sessions, tumor shrank, pain eased, gained 0.9 kg; deep spread found at autopsy</td><td class="num">[18][21]</td></tr>
+      <tr><td>Toceranib after radiation</td><td>Blocks growth-signal receptors (VEGFR, PDGFR, KIT) on tumor and vessel cells</td><td>Retrospective, 2025</td><td>No overall benefit (208 vs 162 d); tongue tumors regrew later (142 vs 104 d)</td><td class="num">[3]</td></tr>
+      <tr><td>Cetuximab, gefitinib (EGFR blockers)</td><td>Block EGFR, a growth receptor on 70% of these tumors</td><td>Cell lines only</td><td>Slowed growth in dishes. 2026 DNA study: EGFR gain in only 6% of tumors and FAT1 loss common, so EGFR drugs alone are unlikely to work</td><td class="num">[2][20]</td></tr>
+      <tr><td>PI3K/mTOR inhibitors</td><td>Block a growth pathway switched on by PTEN loss (44% of tumors) and PIK3CA gain (19%)</td><td>Proposed from 2026 sequencing; no cat trial</td><td>None. Authors suggest pairing with carboplatin or radiation since mTOR drugs alone failed in human head and neck cancer</td><td class="num">[20]</td></tr>
+      <tr><td>Checkpoint immunotherapy (PD-1/PD-L1)</td><td>Antibodies that release the immune brake tumors exploit</td><td>No cat-specific drug; proposed</td><td>Tumors express PD-L1 and PD-1 rose in STAT3 responders, but mutation burden is low (mean 0.7/Mb), which predicts weaker response. Earlier LAK-cell immunotherapy was safe but did not extend survival</td><td class="num">[2][17][20]</td></tr>
+      <tr><td>Nanobody photodynamic therapy</td><td>Tiny EGFR-targeting antibody fragments carry a light-sensitive chemical; a light beam then kills only labeled cells</td><td>Cell lines and tissue (Utrecht, 2021); Morris-funded path to cats</td><td>Killed all three feline SCC cell lines while sparing neighbors; no cat treated yet</td><td class="num">[33]</td></tr>
+      <tr><td>Porphysome photodynamic therapy</td><td>Light-activated nanoparticles, non-surgical</td><td>Morris-funded (Guelph, 2023)</td><td>None published</td><td class="num">[34]</td></tr>
+      <tr><td>Lactate-transport (MCT1) blockers</td><td>Stop tumor cells feeding on lactic acid made by neighboring cells ("metabolic symbiosis")</td><td>Cell lines (Minnesota); drug not available for cats</td><td>Symbiosis confirmed in cat tumors; next-generation compounds in human pipeline</td><td class="num">[35]</td></tr>
+      <tr><td>Umbilical-cord stem cells; liposomal cisplatin; ethanol ablation</td><td>Various</td><td>Small trials</td><td>Stem cells: survival under 1 month. Liposomal cisplatin: no responses. Ethanol: transient shrinkage only</td><td class="num">[2]</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="recent">
+  <h2>Recent data, 2025–2026</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Date</th><th>Study</th><th>Finding</th><th>Meaning for treatment</th><th>Ref</th></tr></thead>
+    <tbody>
+      <tr><td class="num">Apr 2025</td><td>Radiation + carboplatin ± toceranib, 47 cats</td><td>MST 164 d. Toceranib after: 208 vs 162 d, not significant. Tongue: 142 vs 104 d before regrowth</td><td>Toceranib after radiation helps little, except possibly tongue tumors</td><td class="num">[3]</td></tr>
+      <tr><td class="num">Aug 2025</td><td>STAT3 decoy phase 1, 20 cats, Cancer Cell</td><td>35% disease control; mild anemia only</td><td>First targeted drug with measurable benefit; phase 2 planned</td><td class="num">[16][17]</td></tr>
+      <tr><td class="num">Jul 2025</td><td>Electrochemotherapy, skin SCC, 23 cats</td><td>78% response; early-stage best</td><td>Supports trying it on reachable oral tumors</td><td class="num">[18]</td></tr>
+      <tr><td class="num">Oct 2025</td><td>Field review, Front Vet Sci</td><td>Collected survival numbers; flags EGFR, immunotherapy, metabolic drugs</td><td>Background reference</td><td class="num">[2]</td></tr>
+      <tr><td class="num">Jan 2026</td><td>4,300 biopsy cases, Germany</td><td>41% of cat SCC in the mouth, 36% skin</td><td>Epidemiology only</td><td class="num">[19]</td></tr>
+      <tr><td class="num">Feb 2026</td><td>Tumor DNA sequencing, 36 tumors</td><td>TP53 mutated 71%; PTEN loss 44%, MYC gain 41%, CDKN2A loss 41%; EGFR gain 6%; very few mutations</td><td>Like human HPV-negative head and neck cancer. EGFR drugs alone unlikely; PI3K/mTOR + radiation suggested; checkpoint drugs still worth testing</td><td class="num">[20]</td></tr>
+      <tr><td class="num">2026</td><td>Electrochemotherapy, tongue, 1 cat</td><td>Tumor shrank, cat ate again; deep spread at autopsy</td><td>Palliative for tongue tumors</td><td class="num">[21]</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="sources">
   <h2>Sources</h2>
   <ol class="refs">
-    <li><a href="https://todaysveterinarypractice.com/oncology/feline-oral-squamous-cell-carcinoma/">A Review of Feline Oral SCC</a>, Today's Veterinary Practice.</li>
-    <li>Tutu P, Daraban Bocaneti F, et al. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12554573/">Feline oral SCC: recent advances and future perspectives</a>. Front Vet Sci 2025;12:1663990.</li>
-    <li>Schlueter A, Hanot C, Sellon R, Fidel J. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11970090/">Accelerated radiation and carboplatin with and without follow-up toceranib</a>. J Feline Med Surg 2025.</li>
-    <li>Poirier VJ, Kaser-Hotz B, Vail DM, Straw RC. <a href="https://pubmed.ncbi.nlm.nih.gov/23078236/">Accelerated hypofractionated RT in cats with oral SCC</a>. Vet Radiol Ultrasound 2013;54:81–88.</li>
-    <li>Fidel J, et al. <a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1939-1676.2011.0721.x">Accelerated radiation therapy and concomitant carboplatin in cats</a>. J Vet Intern Med 2011;25:504–510.</li>
-    <li><a href="https://www.dvm360.com/view/feline-oral-squamous-cell-carcinoma-overview">Feline oral SCC: an overview</a>, dvm360.</li>
-    <li><a href="https://pubmed.ncbi.nlm.nih.gov/11245242/">Response of feline oral SCC to palliative radiation therapy</a> (8 Gy × 3), PubMed 11245242.</li>
-    <li><a href="https://pubmed.ncbi.nlm.nih.gov/24766180/">Palliative radiation therapy outcomes for cats with oral SCC (1999–2005)</a>, Vet Radiol Ultrasound.</li>
-    <li>Wiles V, Hohenhaus A, et al. <a href="https://journals.sagepub.com/doi/10.1177/1098612X15622237">Toceranib phosphate in cats with oral SCC</a>. J Feline Med Surg 2017.</li>
-    <li><a href="https://vsso.org/oral-scc-feline">Oral SCC – Feline</a>, Veterinary Society of Surgical Oncology (VSSO).</li>
-    <li>Yoshikawa H, et al. <a href="https://pubmed.ncbi.nlm.nih.gov/23815402/">Predictive molecular variables in feline oral SCC treated with stereotactic RT</a>. Vet Comp Oncol 2013.</li>
-    <li>Fidel J, et al. <a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1740-8261.2007.00283.x">A nine-day accelerated radiation protocol for feline SCC</a>. Vet Radiol Ultrasound 2007.</li>
-    <li><a href="https://www.researchgate.net/publication/5563450_Phase_I_Clinical_Evaluation_of_Carboplatin_in_Tumor-Bearing_Cats_A_Veterinary_Cooperative_Oncology_Group_Study">Phase I carboplatin in tumor-bearing cats</a>, Veterinary Cooperative Oncology Group.</li>
-    <li><a href="https://research.vetmed.ufl.edu/feline-rna-nanoparticle-vaccine-against-oral-squamous-cell-carcinoma/">UF feline RNA nanoparticle vaccine trial</a>.</li>
-    <li><a href="https://vetmed.illinois.edu/wp-content/uploads/2025/11/canine-and-feline-squamous-cell-carcinoma-.pdf">Illinois intratumoral nanoparticle trial flyer</a>.</li>
-    <li><a href="https://www.the-scientist.com/first-of-its-kind-drug-shrunk-oral-tumors-in-pet-cats-73330">First-of-its-kind drug shrunk oral tumors in pet cats</a>, The Scientist (Cancer Cell 2025 study).</li>
-    <li>Grandis JR, Skorupski KA, et al. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12404672/">Safety and efficacy of a STAT3-targeted cyclic oligonucleotide… phase 1 trial in pet cats with oral cancer</a>. Cancer Cell 2025;43(11). doi:10.1016/j.ccell.2025.07.015.</li>
-    <li>Foo M, Peura A, Toh YS, Gramer I. <a href="https://doi.org/10.1177/1098612x251347152">Electrochemotherapy in early-stage feline cutaneous SCC</a>. J Feline Med Surg 2025.</li>
-    <li>Riedl A-C, et al. <a href="https://www.mdpi.com/2813-9372/3/1/3">SCC in cats: 4300 histopathological cases (2017–2023)</a>. Pets 2026;3(1):3.</li>
-    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC13420018/">Whole exome sequencing of feline oral SCC reveals parallels with human head and neck SCC</a>. Vet Comp Oncol 2026;24(2):300–312. doi:10.1111/vco.70054.</li>
-    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC13430723/">Electrochemotherapy for feline lingual SCC: case report</a>. Front Vet Sci 2026.</li>
-    <li><a href="https://www.csuanimalcancercenter.org/current-clinical-trials/">CSU Flint Animal Cancer Center current clinical trials</a>.</li>
-    <li>AVMA registry new listings: <a href="https://www.avma.org/news/new-listings-avma-animal-health-studies-database-may-2023">May 2023</a>, <a href="https://www.avma.org/news/new-listings-avma-veterinary-clinical-trials-registry-september-2024">Sep 2024</a>.</li>
+    <li id="r1"><a href="https://todaysveterinarypractice.com/oncology/feline-oral-squamous-cell-carcinoma/">A Review of Feline Oral SCC</a>, Today's Veterinary Practice.</li>
+    <li id="r2">Tutu P, Daraban Bocaneti F, et al. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12554573/">Feline oral SCC: recent advances and future perspectives</a>. Front Vet Sci 2025;12:1663990.</li>
+    <li id="r3">Schlueter A, Hanot C, Sellon R, Fidel J. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11970090/">Accelerated radiation and carboplatin with and without follow-up toceranib</a>. J Feline Med Surg 2025.</li>
+    <li id="r4">Poirier VJ, Kaser-Hotz B, Vail DM, Straw RC. <a href="https://pubmed.ncbi.nlm.nih.gov/23078236/">Accelerated hypofractionated RT in cats with oral SCC</a>. Vet Radiol Ultrasound 2013;54:81–88.</li>
+    <li id="r5">Fidel J, et al. <a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1939-1676.2011.0721.x">Accelerated radiation therapy and concomitant carboplatin in cats</a>. J Vet Intern Med 2011;25:504–510.</li>
+    <li id="r6">Northrup NC, et al. <a href="https://pubmed.ncbi.nlm.nih.gov/16960038/">Outcomes of cats with oral tumors treated with mandibulectomy: 42 cases</a>. JAAHA 2006;42:350–360.</li>
+    <li id="r7"><a href="https://pubmed.ncbi.nlm.nih.gov/11245242/">Response of feline oral SCC to palliative radiation therapy</a> (8 Gy × 3). PubMed 11245242.</li>
+    <li id="r8"><a href="https://pubmed.ncbi.nlm.nih.gov/24766180/">Palliative radiation therapy outcomes for cats with oral SCC (1999–2005)</a>. Vet Radiol Ultrasound 2014.</li>
+    <li id="r9">Wiles V, Hohenhaus A, et al. <a href="https://journals.sagepub.com/doi/10.1177/1098612X15622237">Toceranib phosphate in cats with oral SCC</a>. J Feline Med Surg 2017.</li>
+    <li id="r10"><a href="https://vsso.org/oral-scc-feline">Oral SCC – Feline</a>, Veterinary Society of Surgical Oncology.</li>
+    <li id="r11">Yoshikawa H, et al. <a href="https://pubmed.ncbi.nlm.nih.gov/23815402/">Predictive molecular variables in feline oral SCC treated with stereotactic RT</a>. Vet Comp Oncol 2013.</li>
+    <li id="r12">Fidel J, et al. <a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1740-8261.2007.00283.x">A nine-day accelerated radiation protocol for feline SCC</a>. Vet Radiol Ultrasound 2007.</li>
+    <li id="r13"><a href="https://www.researchgate.net/publication/5563450_Phase_I_Clinical_Evaluation_of_Carboplatin_in_Tumor-Bearing_Cats_A_Veterinary_Cooperative_Oncology_Group_Study">Phase I carboplatin in tumor-bearing cats</a>, Veterinary Cooperative Oncology Group.</li>
+    <li id="r14"><a href="https://research.vetmed.ufl.edu/feline-rna-nanoparticle-vaccine-against-oral-squamous-cell-carcinoma/">UF feline RNA nanoparticle vaccine trial</a>.</li>
+    <li id="r15"><a href="https://vetmed.illinois.edu/wp-content/uploads/2025/11/canine-and-feline-squamous-cell-carcinoma-.pdf">Illinois intratumoral nanoparticle trial flyer</a> (Nov 2025).</li>
+    <li id="r16"><a href="https://www.the-scientist.com/first-of-its-kind-drug-shrunk-oral-tumors-in-pet-cats-73330">First-of-its-kind drug shrunk oral tumors in pet cats</a>, The Scientist.</li>
+    <li id="r17">Grandis JR, Skorupski KA, et al. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12404672/">Safety and efficacy of a STAT3-targeted cyclic oligonucleotide: phase 1 trial in pet cats with oral cancer</a>. Cancer Cell 2025;43(11).</li>
+    <li id="r18">Foo M, et al. <a href="https://doi.org/10.1177/1098612x251347152">Electrochemotherapy in early-stage feline cutaneous SCC</a>. J Feline Med Surg 2025.</li>
+    <li id="r19">Riedl A-C, et al. <a href="https://www.mdpi.com/2813-9372/3/1/3">SCC in cats: 4300 histopathological cases (2017–2023)</a>. Pets 2026;3(1):3.</li>
+    <li id="r20"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC13420018/">Whole exome sequencing of feline oral SCC reveals parallels with human head and neck SCC</a>. Vet Comp Oncol 2026;24(2):300–312.</li>
+    <li id="r21"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC13430723/">Electrochemotherapy for feline lingual SCC: case report</a>. Front Vet Sci 2026.</li>
+    <li id="r22"><a href="https://www.csuanimalcancercenter.org/current-clinical-trials/">CSU Flint Animal Cancer Center current clinical trials</a>; study page "Novel Immunotherapy for Cats with Oral SCC" (PI Steve Dow).</li>
+    <li id="r23">AVMA Veterinary Clinical Trials Registry new listings: <a href="https://www.avma.org/news/new-listings-avma-animal-health-studies-database-may-2023">May 2023</a>, <a href="https://www.avma.org/news/new-listings-avma-veterinary-clinical-trials-registry-september-2024">Sep 2024</a>.</li>
+    <li id="r24"><a href="https://cvm.ncsu.edu/wp-content/uploads/sites/2/2024/04/SCC-Flyer-09.06.2024.pdf">NC State recruiting flyer, cats with oral cancer</a> (Sept 2024); registry <a href="https://veterinaryclinicaltrials.org/study/VCT24005841">VCT24005841</a>.</li>
+    <li id="r25">Lundberg AP, et al. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9796441/">Combining radiation therapy with zoledronate for osteo-invasive feline oral SCC</a>. Vet Comp Oncol 2022;20:788–796.</li>
+    <li id="r26"><a href="https://veterinaryclinicaltrials.org/s/foscc-lattice-929575/">FOSCC Lattice</a>, University of Missouri (PI Charlie Maitz), registry listing.</li>
+    <li id="r27"><a href="https://floridaphysician.med.ufl.edu/2026/05/22/breakthroughs-begin-here/">Breakthroughs begin here</a>, Florida Physician, May 2026 (Sayour lab mRNA platform, cat SCC trial).</li>
+    <li id="r28">Camonsertib background: <a href="https://www.nature.com/articles/s41591-023-02399-0">phase 1 in humans, Nat Med 2023</a>; <a href="https://clinicaltrials.gov/study/NCT07156227">human head and neck SCC radiation trial</a>.</li>
+    <li id="r29"><a href="https://news.cvm.ncsu.edu/nc-state-clinical-trial-testing-promising-canine-osteosarcoma-treatment/">NC State radiation-enhancer program</a> (Nolan lab), news article.</li>
+    <li id="r30"><a href="https://www.morrisanimalfoundation.org/study/evaluating-combination-therapy-approach-oral-cancer-cats">Evaluating a combination therapy approach for oral cancer in cats</a>, Morris Animal Foundation.</li>
+    <li id="r31">Lundberg AP, Boudreau MW, Selting KA, et al. <a href="https://www.sciencedirect.com/science/article/pii/S147655862100049X">Utilizing feline oral SCC patients to develop NQO1-targeted therapy</a>. Neoplasia 2021;23:811–822.</li>
+    <li id="r32"><a href="https://vetmed.illinois.edu/pet-health-columns/mouth-cancer-cats/">New compound targets mouth cancer in cats</a>, Illinois Vet Med; AAFP 2020 abstract, J Feline Med Surg.</li>
+    <li id="r33">Beltrán Hernández I, et al. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9646246/">Nanobody-targeted photodynamic therapy for feline oral carcinoma</a>. Nanophotonics 2021.</li>
+    <li id="r34"><a href="https://www.dvm360.com/view/feline-oral-cancer-is-the-focus-of-a-new-study">Feline oral cancer is the focus of a new study</a>, dvm360, Mar 2023 (Oblak, Guelph, porphysomes).</li>
+    <li id="r35"><a href="https://www.morrisanimalfoundation.org/article/feline-oral-squamous-cell-carcinoma-new-treatment">Taking on a deadly cancer in cats</a>, Morris Animal Foundation (Dickerson, Minnesota, metabolic symbiosis).</li>
   </ol>
 </section>
 
-<footer>Repo: ~/Desktop/projects/feline-oral-scc · Survival bars scaled to 365 days.</footer>
+<footer>Repo: ~/Desktop/projects/feline-oral-scc · Survival bars scaled to 365 days · Bracketed numbers refer to the sources list.</footer>
 </div>
